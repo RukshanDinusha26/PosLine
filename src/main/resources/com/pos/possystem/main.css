@@ -1,0 +1,99 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+
+.table-cont{
+    -fx-background-color: #d7d7d7;
+}
+
+.search {
+    -fx-background-radius: 50px;
+    -fx-background-color: #d7d7d7; /* Light grey background */
+    -fx-padding: 10px; /* Padding inside the search bar */
+    -fx-background-insets: 0;
+    -fx-border-color: transparent; /* No border initially */
+    -fx-border-width: 2px
+}
+
+.search:focused {
+    -fx-background-color: #ffffff; /* White background on focus */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.3), 15, 0, 0, 4); /* Stronger shadow on focus */
+}
+
+.search .text {
+    -fx-prompt-text-fill: #a0a0a0; /* Lighter color for placeholder text */
+    -fx-text-fill: #333333; /* Darker text color for input */
+    -fx-font-size: 16px; /* Modern font size */
+    -fx-font-family: "Arial", sans-serif; /* Clean modern font */
+}
+.nav-btn {
+    -fx-background-color: transparent;
+    -fx-border-color: grey; /* Default text color */
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px; /* Border radius for rounded corners */
+}
+
+.logout-btn{
+    -fx-background-color: transparent;
+    -fx-border-color: grey; /* Default text color */
+    -fx-border-width: 2px;
+    -fx-border-radius: 5px;
+    -fx-cursor: hand;
+}
+
+/* Style when the button is active or selected */
+.nav-btn:focused,
+.nav-btn:pressed {
+    -fx-background-color: transparent; /* Keeps background transparent */
+    -fx-border-color: orange; /* Border color when active */
+    -fx-text-fill: orange; /* Font color when active */
+    -fx-border-width: 2px; /* Adjust border width if needed */
+    -fx-border-radius: 10px; /* Rounded corners when active */
+}
+
+.payment{
+    -fx-background-color: green;
+}
+
+.lg-btn{
+    -fx-background-color: #d7d7d7;
+    -fx-border-radius: 5px;
+}
+
+.pay-cont{
+    -fx-background-color: #a9a9a9;
+}
+
+.item-cont{
+    -fx-background-color: #ffffff;
+    -fx-background-radius: 20px;
+    -fx-border-radius: 20px;
+}
+
+.table-view {
+    -fx-background-color: #f5f5f5;
+    -fx-border-color: #d7d7d7;
+    -fx-border-width: 1px;
+}
+
+.table-view .column-header-background {
+    -fx-background-color: #d7d7d7;
+}
+
+.table-view .column-header {
+    -fx-background-color: #d7d7d7;
+    -fx-text-fill: #333333;
+}
+
+.table-view .row {
+    -fx-background-color: #ffffff;
+}
+
+.table-view .row:selected {
+    -fx-background-color: #e0e0e0;
+}
+
+.table-view .cell {
+    -fx-background-color: #ffffff;
+}
