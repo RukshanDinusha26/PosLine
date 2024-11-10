@@ -10,7 +10,7 @@
 .search {
     -fx-background-radius: 50px;
     -fx-background-color: #d7d7d7; /* Light grey background */
-    -fx-padding: 10px; /* Padding inside the search bar */
+    -fx-padding: 5px; /* Padding inside the search bar */
     -fx-background-insets: 0;
     -fx-border-color: transparent; /* No border initially */
     -fx-border-width: 2px

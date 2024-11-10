@@ -12,7 +12,7 @@ public class database {
     
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/appDB","root","");
+            Connection connect = DriverManager.getConnection("jdbc:mysql://localhost/appdb","root","");
             return connect;
         } catch(Exception e){e.printStackTrace();}
     return null;    

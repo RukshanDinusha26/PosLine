@@ -90,7 +90,6 @@ public class LoginController implements Initializable {
                     
                     // GET HOME PAGE
                     Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
-                    
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
                     
