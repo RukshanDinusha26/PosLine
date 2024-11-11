@@ -6,16 +6,17 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane id="AnchorPane" prefHeight="75.0" prefWidth="300.0" styleClass="receiptCnt" stylesheets="@receiptcard.css" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/23.0.1" fx:controller="com.pos.possystem.ReceiptCardController">
+<AnchorPane id="AnchorPane" prefHeight="75.0" prefWidth="310.0" styleClass="receiptCnt" stylesheets="@receiptcard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.possystem.ReceiptCardController">
    <children>
-      <HBox prefHeight="75.0" prefWidth="300.0">
+      <HBox prefHeight="75.0" prefWidth="310.0">
          <children>
             <VBox prefHeight="75.0" prefWidth="136.0">
                <children>
-                  <Label fx:id="item_name" alignment="BOTTOM_CENTER" prefHeight="42.0" prefWidth="136.0" text="Item">
+                  <Label fx:id="item_name" alignment="BOTTOM_CENTER" graphicTextGap="10.0" prefHeight="42.0" prefWidth="136.0" text="Item" textAlignment="CENTER" textOverrun="WORD_ELLIPSIS" wrapText="true">
                      <font>
-                        <Font name="Arial Black" size="14.0" />
+                        <Font name="Arial Bold" size="14.0" />
                      </font>
                   </Label>
                   <Label fx:id="item_total_qty" alignment="TOP_CENTER" prefHeight="31.0" prefWidth="136.0" text="200g" textAlignment="CENTER" />
@@ -23,15 +24,23 @@
             </VBox>
             <Label fx:id="discount" prefHeight="79.0" prefWidth="28.0" text="-5%" />
             <Label alignment="CENTER_RIGHT" contentDisplay="CENTER" prefHeight="75.0" prefWidth="42.0" text="Rs." />
-            <Label fx:id="tot_price" prefHeight="75.0" prefWidth="71.0" text="3000">
+            <Label fx:id="tot_price" prefHeight="75.0" prefWidth="52.0" text="3000">
                <font>
                   <Font name="Arial" size="14.0" />
                </font>
             </Label>
-            <Button mnemonicParsing="false" prefHeight="80.0" prefWidth="28.0" styleClass="rmvBtn" text="x">
+            <Button mnemonicParsing="false" prefHeight="75.0" prefWidth="46.0" styleClass="rmvBtn">
                <font>
                   <Font name="Arial Black" size="14.0" />
                </font>
+               <graphic>
+                  <FontIcon iconColor="#e82d2d" iconLiteral="fltfal-dismiss-circle-28" iconSize="24" selectionFill="RED" strokeWidth="2.0" wrappingWidth="16.0">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </FontIcon>
+               </graphic>
+              
             </Button>
          </children>
       </HBox>

@@ -149,10 +149,11 @@ public class MainController implements Initializable {
     private ObservableList<receipt_Data> receiptList = FXCollections.observableArrayList();
 
     public void addItemToReceipt(ItemData item, int quantity) {
-
-        receipt_Data receiptItem = new receipt_Data(item.getID(), item.getItemName(), item.getPrice(), quantity);
+        
+        receipt_Data receiptItem = new receipt_Data(item.getID(), item.getItemName(), item.getPrice(),quantity,item.getUnitType());
+        System.out.println("quantity is "+quantity);
         receiptList.add(receiptItem);
-        System.out.println("Item added: " + item.getItemName());
+        System.out.println("Item added: " + receiptList.get(0).getPrice());
         displayReceiptItems();
     }
 
@@ -293,7 +294,7 @@ public class MainController implements Initializable {
                 AnchorPane pane = load.load();
                 ReceiptCardController cardC = load.getController();
                 cardC.setData(receiptList.get(q));
-                System.out.println(receiptList.get(q).getName());
+                System.out.println(receiptList.get(q).getQuantity());
                 if (column == 1) {
                     column = 0;
                     row += 1;
@@ -301,7 +302,7 @@ public class MainController implements Initializable {
 
                 receipt_grid.add(pane, column++, row);
 
-                GridPane.setMargin(pane, new Insets(10));
+                GridPane.setMargin(pane, new Insets(5));
             } catch (Exception e) {
                 e.printStackTrace();
             }

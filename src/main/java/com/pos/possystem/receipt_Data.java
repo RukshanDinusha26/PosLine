@@ -14,13 +14,15 @@ public class receipt_Data {
     private String item_name;
     private Double price;
     private Integer item_qty;
+    private String qty_type;
     
-    public receipt_Data(Integer id, String item_name, Double price, Integer qty){
+    public receipt_Data(Integer itemid, String item_name, Double price, Integer item_qty, String qty_type){
    
         this.itemid = itemid;
         this.item_name = item_name;
         this.price = price;
         this.item_qty= item_qty;
+        this.qty_type = qty_type;
     }
     
     public Integer getID(){
@@ -41,11 +43,16 @@ public class receipt_Data {
     {
         return item_qty;
     }
-    
-    public Double getTotalPrice()
+    public String getUnit()
     {
-        return 1.0;
+        return qty_type;
     }
+    
+    public double getTotalPrice()
+    {
+        return this.getPrice()* this.getQuantity();
+    }
+    
             
     
 }
