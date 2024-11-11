@@ -31,6 +31,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.control.ToggleButton;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -62,6 +63,9 @@ public class MainController implements Initializable {
 
     @FXML
     private GridPane menu_gridPane;
+
+    @FXML
+    private ToggleButton toggle_btn;
 
     @FXML
     private TextField item_price;
@@ -129,6 +133,9 @@ public class MainController implements Initializable {
     @FXML
     private Button logout_btn;
 
+    @FXML
+    private GridPane receipt_grid;
+
     private static final String DB_URL = "jdbc:mysql://localhost/appdb";
     private static final String USER = "root";
     private static final String PASSWORD = "";
@@ -139,6 +146,15 @@ public class MainController implements Initializable {
     private ResultSet result;
 
     private ObservableList<ItemData> cardListData = FXCollections.observableArrayList();
+    private ObservableList<receipt_Data> receiptList = FXCollections.observableArrayList();
+
+    public void addItemToReceipt(ItemData item, int quantity) {
+
+        receipt_Data receiptItem = new receipt_Data(item.getID(), item.getItemName(), item.getPrice(), quantity);
+        receiptList.add(receiptItem);
+        System.out.println("Item added: " + item.getItemName());
+        displayReceiptItems();
+    }
 
     public void switchForm(ActionEvent event) {
         if (event.getSource() == sales_mode) {
@@ -195,14 +211,14 @@ public class MainController implements Initializable {
         return listData;
     }
 
-    public void menuDisplayCard() {
+    public void menuDisplayCard2() {
 
         cardListData.clear();
         cardListData.addAll(menuGetData());
 
         int row = 0;
         int column = 0;
-        
+
         menu_gridPane.getChildren().clear();
         menu_gridPane.getRowConstraints().clear();
         menu_gridPane.getColumnConstraints().clear();
@@ -215,14 +231,77 @@ public class MainController implements Initializable {
                 ItemCardController cardC = load.getController();
                 cardC.setData(cardListData.get(q));
 
-                if (column == 3) {
+                if (column == 4) {
                     column = 0;
                     row += 1;
                 }
 
                 menu_gridPane.add(pane, column++, row);
-                
-                GridPane.setMargin(pane,new Insets(10));
+
+                GridPane.setMargin(pane, new Insets(10));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void menuDisplayCard() {
+
+        cardListData.clear();
+        cardListData.addAll(menuGetData());
+
+        int row = 0;
+        int column = 0;
+
+        menu_gridPane.getChildren().clear();
+        menu_gridPane.getRowConstraints().clear();
+        menu_gridPane.getColumnConstraints().clear();
+
+        for (int q = 0; q < cardListData.size(); q++) {
+
+            try {
+                FXMLLoader load = new FXMLLoader(getClass().getResource("ItemCard_2.fxml"));
+                AnchorPane pane = load.load();
+                ItemCard_2Controller cardC = load.getController();
+                cardC.setData(cardListData.get(q));
+                cardC.setMainController(this);
+
+                if (column == 1) {
+                    column = 0;
+                    row += 1;
+                }
+
+                menu_gridPane.add(pane, column++, row);
+
+                GridPane.setMargin(pane, new Insets(10));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void displayReceiptItems() {
+
+
+        int row = 0;
+        int column = 0;
+
+      
+        for (int q = 0; q < receiptList.size(); q++) {
+            try {
+                FXMLLoader load = new FXMLLoader(getClass().getResource("receiptCard.fxml"));
+                AnchorPane pane = load.load();
+                ReceiptCardController cardC = load.getController();
+                cardC.setData(receiptList.get(q));
+                System.out.println(receiptList.get(q).getName());
+                if (column == 1) {
+                    column = 0;
+                    row += 1;
+                }
+
+                receipt_grid.add(pane, column++, row);
+
+                GridPane.setMargin(pane, new Insets(10));
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -253,7 +332,19 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        System.out.println("initialize() is called"); // Debug statement
+
         menuDisplayCard();
+
+        toggle_btn.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue) {
+                System.out.println("Toggle ON: Displaying ItemCard2");
+                menuDisplayCard2(); // Load ItemCard2 layout
+            } else {
+                System.out.println("Toggle OFF: Displaying ItemCard1");
+                menuDisplayCard(); // Load ItemCard1 layout
+            }
+
+        });
+
     }
 }

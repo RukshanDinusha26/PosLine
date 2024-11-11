@@ -3,7 +3,11 @@
  */
 
 .cardbackground {
-    -fx-padding: 5px;
     -fx-background-radius: 10px;
     -fx-background-color: #ffffff;
+    -fx-padding: 10px;
+}
+
+.addbtn{
+    -fx-background-color: #FFD900;
 }

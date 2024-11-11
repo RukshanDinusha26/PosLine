@@ -9,45 +9,49 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
 <AnchorPane id="AnchorPane" prefHeight="180.0" prefWidth="180.0" styleClass="cardbackground" stylesheets="@itemcard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.possystem.ItemCardController">
    <children>
-      <VBox layoutX="-2.0" prefHeight="180.0" prefWidth="188.0">
+      <VBox fillWidth="false" prefHeight="176.0" prefWidth="161.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <HBox alignment="CENTER" prefHeight="34.0" prefWidth="188.0">
                <children>
-                  <Label fx:id="item_name" prefHeight="34.0" prefWidth="133.0" text="ITEM NAME" textAlignment="CENTER" />
-                  <Label fx:id="item_price" prefHeight="34.0" prefWidth="83.0" text="Price" />
+                  <Label fx:id="item_name" prefHeight="34.0" prefWidth="133.0" text="ITEM NAME" textAlignment="CENTER">
+                     <font>
+                        <Font name="Arial Black" size="14.0" />
+                     </font></Label>
+                  <Label fx:id="item_price" prefHeight="34.0" prefWidth="83.0" text="Price">
+                     <font>
+                        <Font name="Arial" size="12.0" />
+                     </font></Label>
                </children>
                <padding>
                   <Insets left="5.0" />
                </padding>
             </HBox>
-            <AnchorPane prefHeight="116.0" prefWidth="198.0">
+            <AnchorPane prefHeight="143.0" prefWidth="190.0">
                <children>
-                  <ImageView fx:id="img_cont" fitHeight="103.0" fitWidth="209.0" layoutX="7.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="img_cont" fitHeight="122.0" fitWidth="183.0" layoutX="7.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../../../../../../../../Downloads/wallpaperflare.com_wallpaper.jpg" />
                      </image>
                   </ImageView>
                </children></AnchorPane>
-            <HBox prefHeight="26.0" prefWidth="191.0" spacing="5.0">
+            <HBox prefHeight="62.0" prefWidth="191.0" spacing="5.0">
                <children>
                   <Spinner fx:id="item_qty" editable="true" prefHeight="25.0" prefWidth="83.0" />
-                  <Label fx:id="qty_type" prefHeight="17.0" prefWidth="28.0" text="g" />
-                  <Button fx:id="add_btn" mnemonicParsing="false" prefHeight="25.0" prefWidth="72.0" text="Add" />
+                  <Label fx:id="qty_type" prefHeight="36.0" prefWidth="24.0" text="g" />
+                  <Button fx:id="add_btn" mnemonicParsing="false" prefHeight="25.0" prefWidth="72.0" styleClass="addbtn" text="Add" textFill="WHITE">
+                     <font>
+                        <Font name="Arial Black" size="12.0" />
+                     </font></Button>
                </children>
                <padding>
                   <Insets left="5.0" right="5.0" />
                </padding>
             </HBox>
          </children>
-         <padding>
-            <Insets left="5.0" />
-         </padding>
       </VBox>
    </children>
-   <padding>
-      <Insets left="5.0" />
-   </padding>
 </AnchorPane>

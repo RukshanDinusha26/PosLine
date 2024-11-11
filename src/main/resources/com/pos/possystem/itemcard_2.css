@@ -1,0 +1,14 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+
+.cardbackground{
+    -fx-background-radius: 100px;
+    -fx-background-color: #ffffff;
+}
+
+.addbtn{
+    -fx-background-color: transparent;
+    -fx-border: none;
+}
