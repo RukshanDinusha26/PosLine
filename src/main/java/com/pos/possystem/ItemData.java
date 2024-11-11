@@ -1,0 +1,60 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
+package com.pos.possystem;
+
+/**
+ *
+ * @author Lenovo
+ */
+public class ItemData {
+
+    public ItemData() {
+    }
+    
+    private Integer itemid;
+    private String item_name;
+    private Double item_price;
+    private Integer item_barcode;
+    private String item_unit_type;
+    private String item_alpha_search;
+    private Double item_discount;
+    
+    public ItemData(Integer itemid, String item_name, Double item_price, Integer item_barcode, String item_unit_type,
+            String item_alpha_search, Double item_discount)
+    {
+        this.itemid = itemid;
+        this.item_name = item_name;
+        this.item_price = item_price;
+        this.item_barcode = item_barcode;
+        this.item_unit_type = item_unit_type;
+        this.item_alpha_search = item_alpha_search;
+        this.item_discount = item_discount;
+    }
+    
+    public ItemData(Integer itemid,String item_name, Double item_price, String item_unit_type)
+    {
+        this.itemid = itemid;
+        this.item_name = item_name;
+        this.item_price = item_price;
+        this.item_unit_type = item_unit_type;
+    }
+    
+    public Integer getID(){
+        return itemid;
+    }
+    
+    public String getItemName() {
+        return item_name;
+    }
+    
+    public Double getPrice(){
+        return item_price;
+    }
+    
+    public String getUnitType(){
+        return item_unit_type;
+    }
+        
+}

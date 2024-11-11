@@ -77,6 +77,8 @@ public class LoginController implements Initializable {
                 alert.showAndWait();
             }else{
                 if(result.next()){
+                    // GET USER ID 
+                    Data.userID = user_id.getText();
                     //PROCEED TO HOME
                     
                     alert = new Alert(AlertType.INFORMATION);
