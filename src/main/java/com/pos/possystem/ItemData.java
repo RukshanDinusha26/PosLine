@@ -41,20 +41,59 @@ public class ItemData {
         this.item_unit_type = item_unit_type;
     }
     
-    public Integer getID(){
+    public void setItemid(Integer itemid){
+        this.itemid = itemid;
+    }
+    public Integer getItemid(){
         return itemid;
     }
     
-    public String getItemName() {
+    public void setItem_name(String item_name){
+       this.item_name = item_name;
+    }
+    
+    public String getItem_name() {
         return item_name;
     }
     
-    public Double getPrice(){
+    public void setItem_price(Double item_price){
+        this.item_price = item_price;
+    }
+    
+    public Double getItem_price(){
         return item_price;
     }
     
-    public String getUnitType(){
+    public void setItem_barcode(Integer item_barcode){
+        this.item_barcode = item_barcode;
+    }
+    
+    public Integer getItem_barcode(){
+        return item_barcode;
+    }
+    
+    public void setItem_unit_type(String item_unit_type){
+        this.item_unit_type = item_unit_type;
+    }
+            
+    public String getItem_unit_type(){
         return item_unit_type;
+    }
+    
+    public void setItem_alpha_search(String item_alpha_search){
+        this.item_alpha_search = item_alpha_search;
+    }
+    
+    public String getItem_alpha_search(){
+        return item_alpha_search;
+    }
+    
+    public void setItem_discount(Double item_discount){
+        this.item_discount = item_discount;
+    }
+    
+    public Double getItem_discount(){
+        return item_discount;
     }
         
 }

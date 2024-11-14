@@ -30,15 +30,13 @@
 .nav-btn {
     -fx-background-color: transparent;
     -fx-border-color: grey; /* Default text color */
-    -fx-border-width: 2px;
-    -fx-border-radius: 5px; /* Border radius for rounded corners */
+    -fx-border-width: 1.5px;
+    -fx-border-radius:10px; /* Border radius for rounded corners */
 }
 
 .logout-btn{
     -fx-background-color: transparent;
-    -fx-border-color: grey; /* Default text color */
-    -fx-border-width: 2px;
-    -fx-border-radius: 5px;
+    -fx-border-color: transparent; /* Default text color */
     -fx-cursor: hand;
 }
 
@@ -46,10 +44,16 @@
 .nav-btn:focused,
 .nav-btn:pressed {
     -fx-background-color: transparent; /* Keeps background transparent */
-    -fx-border-color: orange; /* Border color when active */
-    -fx-text-fill: orange; /* Font color when active */
+    -fx-border-color: #f59318; /* Border color when active */
+    -fx-text-fill: #f59318; /* Font color when active */
     -fx-border-width: 2px; /* Adjust border width if needed */
     -fx-border-radius: 10px; /* Rounded corners when active */
+}
+
+.nav-btn:pressed .icon,
+.nav-btn:pressed .label,.nav-btn:focused .icon, .nav-btn:focused .label{
+    -fx-fill: #f59318; /* Icon color when active */
+    -fx-text-fill: #f59318; /* Label color when active */
 }
 
 .payment{
@@ -67,8 +71,8 @@
 
 .item-cont{
     -fx-background-color: #ffffff;
-    -fx-background-radius: 20px;
-    -fx-border-radius: 20px;
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
 }
 
 /* Style the TableView */
@@ -109,4 +113,15 @@
 
 .scroll-pane .viewport {
        -fx-background-color: transparent;
+}
+
+.report-card{
+    -fx-background-color: linear-gradient(to bottom right, #FFD900, #FF8D00);
+}
+
+.report-btn{
+    -fx-background-color: transparent;
+    -fx-border-width: 2px;
+    -fx-border-color: #FFD900;
+    -fx-border-radius: 10px;
 }

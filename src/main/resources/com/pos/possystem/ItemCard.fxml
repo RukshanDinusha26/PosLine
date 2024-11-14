@@ -19,7 +19,7 @@
                <children>
                   <Label fx:id="item_name" prefHeight="34.0" prefWidth="133.0" text="ITEM NAME" textAlignment="CENTER">
                      <font>
-                        <Font name="Arial Black" size="14.0" />
+                        <Font name="Montserrat Thin" size="14.0" />
                      </font></Label>
                   <Label fx:id="item_price" prefHeight="34.0" prefWidth="83.0" text="Price">
                      <font>

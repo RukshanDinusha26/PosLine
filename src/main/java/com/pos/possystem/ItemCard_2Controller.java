@@ -70,9 +70,9 @@ public class ItemCard_2Controller implements Initializable {
     public void setData(ItemData item_data){
         this.item_data = item_data;
         
-        item_name.setText(item_data.getItemName());
-        item_price.setText(String.valueOf(item_data.getPrice()));
-        qty_type.setText(item_data.getUnitType());
+        item_name.setText(item_data.getItem_name());
+        item_price.setText(String.valueOf(item_data.getItem_price()));
+        qty_type.setText(item_data.getItem_unit_type());
     }
     
     

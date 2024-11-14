@@ -47,7 +47,8 @@ public class ReceiptCardController implements Initializable {
         this.receipt_data = receipt_data;
         
         item_name.setText(receipt_data.getName());
-        item_total_qty.setText(String.valueOf(receipt_data.getQuantity())+receipt_data.getUnit());
+        item_total_qty.setText(String.valueOf(receipt_data.getQuantity())+' '+
+                receipt_data.getUnit());
         tot_price.setText(String.valueOf(receipt_data.getTotalPrice()));
     }
     
