@@ -16,12 +16,16 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -32,6 +36,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -71,6 +76,12 @@ public class MainController implements Initializable {
 
     @FXML
     private GridPane menu_gridPane;
+
+    @FXML
+    private GridPane user_grid_pane;
+
+    @FXML
+    private GridPane stock_grid_pane;
 
     @FXML
     private ToggleButton toggle_btn;
@@ -145,10 +156,27 @@ public class MainController implements Initializable {
     private VBox itemContainer;
 
     @FXML
+    private TextField new_user_id;
+
+    @FXML
+    private TextField new_user_password;
+
+    @FXML
+    private TextField confirm_password;
+
+    @FXML
     private Button logout_btn;
 
     @FXML
     private GridPane receipt_grid;
+
+    @FXML
+    private Label sub_total;
+
+    @FXML
+    private Label total;
+    
+    LocalDate currentDate = LocalDate.now();
 
     private static final String DB_URL = "jdbc:mysql://localhost/appdb";
     private static final String USER = "root";
@@ -162,6 +190,226 @@ public class MainController implements Initializable {
 
     private ObservableList<ItemData> cardListData = FXCollections.observableArrayList();
     private ObservableList<receipt_Data> receiptList = FXCollections.observableArrayList();
+    private ObservableList<User_data> userList = FXCollections.observableArrayList();
+    private ObservableList<ItemData> stockList = FXCollections.observableArrayList();
+
+    public ObservableList<ItemData> stockDataList() {
+        ObservableList<ItemData> listData = FXCollections.observableArrayList();
+
+        String sql = "SELECT stock.itemid,stock.stock,item.Name,item.Unit_type FROM stock "
+                + "JOIN item ON stock.itemid = item.itemid";
+
+        connect = database.connectDb();
+
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            ItemData stockdata;
+
+            while (result.next()) {
+                stockdata = new ItemData(result.getInt("stock.itemid"), result.getString("item.Name"), result.getString("item.Unit_type"), result.getInt("stock"));
+                listData.add(stockdata);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(listData.get(0).getItem_name());
+        return listData;
+    }
+
+    public void displayStockCard() {
+        stockList.clear();
+        stockList.addAll(stockDataList());
+        int row = 0;
+        int column = 0;
+
+        stock_grid_pane.getChildren().clear();
+        stock_grid_pane.getRowConstraints().clear();
+        stock_grid_pane.getColumnConstraints().clear();
+
+        for (int q = 0; q < stockList.size(); q++) {
+
+            try {
+                FXMLLoader load = new FXMLLoader(getClass().getResource("stockCard.fxml"));
+                AnchorPane pane = load.load();
+                StockCardController stockC = load.getController();
+                System.out.println(stockList.get(q));
+                stockC.setData(stockList.get(q));
+
+                if (column == 1) {
+                    column = 0;
+                    row += 1;
+                }
+
+                stock_grid_pane.add(pane, column++, row);
+
+                GridPane.setMargin(pane, new Insets(5));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public ObservableList<User_data> userDataList() {
+        ObservableList<User_data> listData = FXCollections.observableArrayList();
+
+        String sql = "SELECT * FROM user";
+
+        connect = database.connectDb();
+
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            User_data userdata;
+
+            while (result.next()) {
+                userdata = new User_data(result.getInt("User_ID"), result.getString("Password"), result.getDate("created_date"));
+                listData.add(userdata);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(listData.get(0).getUser_id());
+        return listData;
+    }
+
+    public void addUser() {
+        if (new_user_id.getText().isEmpty()
+                || new_user_password.getText().isEmpty()
+                || confirm_password.getText().isEmpty()) {
+
+            alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please Fill all Blank fields to add a new Account");
+            alert.showAndWait();
+
+        } else {
+
+            String checkUserId = "SELECT user_ID FROM user WHERE User_ID = "
+                    + new_user_id.getText();
+
+            connect = database.connectDb();
+
+            try {
+                statement = connect.createStatement();
+                result = statement.executeQuery(checkUserId);
+
+                if (result.next()) {
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("user id :" + new_user_id.getText() + " is already taken");
+                    alert.showAndWait();
+                } else {
+
+                    if (new_user_password.getText().equals(confirm_password.getText())) {
+                        String insertData = "INSERT INTO user"
+                                + "(User_id,Password,created_date)"
+                                + "VALUES(?,?,?)";
+
+                        prepare = connect.prepareStatement(insertData);
+                        prepare.setString(1, new_user_id.getText());
+                        prepare.setString(2, new_user_password.getText());
+                        prepare.setString(3, String.valueOf(currentDate));
+                        prepare.executeUpdate();
+
+                        alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle("Sucess Message");
+                        alert.setHeaderText(null);
+                        alert.setContentText("User Successfully Added!");
+                        alert.showAndWait();
+                        userDisplayCard();
+
+                    } else {
+                        alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle("Error Message");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Please Retype the matching password");
+                        alert.showAndWait();
+
+                    }
+
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deleteUser(Integer userid) {
+        alert = new Alert(AlertType.CONFIRMATION);
+        alert.setTitle("Confirm Message");
+        alert.setHeaderText(null);
+        alert.setContentText("Are you sure you want to delete User with ID: " + userid + "?");
+        Optional<ButtonType> option = alert.showAndWait();
+
+        if (option.get().equals(ButtonType.OK)) {
+            String deleteData = "DELETE FROM user WHERE user_id=" + userid;
+
+            try {
+                prepare = connect.prepareStatement(deleteData);
+                prepare.executeUpdate();
+
+                alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Sucess Message");
+                alert.setHeaderText(null);
+                alert.setContentText("User Sucessfully Deleted!");
+                alert.showAndWait();
+
+                userDisplayCard();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else {
+            alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Cancelled");
+            alert.showAndWait();
+
+        }
+
+    }
+
+    public void userDisplayCard() {
+        userList.clear();
+        userList.addAll(userDataList());
+        int row = 0;
+        int column = 0;
+
+        user_grid_pane.getChildren().clear();
+        user_grid_pane.getRowConstraints().clear();
+        user_grid_pane.getColumnConstraints().clear();
+
+        for (int q = 0; q < userList.size(); q++) {
+
+            try {
+                FXMLLoader load = new FXMLLoader(getClass().getResource("UserCard.fxml"));
+                AnchorPane pane = load.load();
+                UserCardController userC = load.getController();
+                System.out.println(userList.get(q));
+                userC.setData(userList.get(q));
+                userC.setMainController(this);
+
+                if (column == 1) {
+                    column = 0;
+                    row += 1;
+                }
+
+                user_grid_pane.add(pane, column++, row);
+
+                GridPane.setMargin(pane, new Insets(5));
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
 
     public void itemAddBtn() {
         if (item_code_input.getText().isEmpty()
@@ -227,6 +475,111 @@ public class MainController implements Initializable {
         }
     }
 
+    public void itemUpdateBtn() {
+        if (item_code_input.getText().isEmpty()
+                || item_name_input.getText().isEmpty()
+                || barcode_input.getText().isEmpty()
+                || item_price_input.getText().isEmpty()
+                || item_discount_input.getText().isEmpty()
+                || alpha_search_input.getText().isEmpty()
+                || item_unit_input.getSelectionModel().getSelectedItem() == null) {
+
+            alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please Select an Item to Update");
+            alert.showAndWait();
+
+        } else {
+
+            String updtId = item_code_input.getText();
+
+            String updateData = "UPDATE item SET itemid = ?, Name = ?, Price = ?, Barcode = ?, Unit_type = ?, Alpha_search = ?, Discount = ? WHERE itemid = ?";
+
+            connect = database.connectDb();
+
+            try {
+                alert = new Alert(AlertType.CONFIRMATION);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Are you sure you want to update item with the code: " + item_code_input.getText() + "?");
+                Optional<ButtonType> option = alert.showAndWait();
+
+                if (option.get().equals(ButtonType.OK)) {
+
+                    prepare = connect.prepareStatement(updateData);
+                    prepare.setString(1, item_code_input.getText());
+                    prepare.setString(2, item_name_input.getText());
+                    prepare.setString(3, item_price_input.getText());
+                    prepare.setString(4, barcode_input.getText());
+                    prepare.setString(5, (String) item_unit_input.getSelectionModel().getSelectedItem());
+                    prepare.setString(6, alpha_search_input.getText());
+                    prepare.setString(7, item_discount_input.getText());
+                    prepare.setString(8, updtId);
+
+                    prepare.executeUpdate();
+
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Sucess Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Sucessfully Updated!");
+                    alert.showAndWait();
+
+                    itemDataShow();
+                    itemInputClear();
+                } else {
+                    itemInputClear();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void itemDeleteBtn() {
+
+        if (item_code_input.getText().isEmpty()) {
+            alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please Select An Item to Delete");
+            alert.showAndWait();
+        } else {
+            alert = new Alert(AlertType.CONFIRMATION);
+            alert.setTitle("Confirm Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Are you sure you want to delete Item with ID: " + item_code_input.getText() + "?");
+            Optional<ButtonType> option = alert.showAndWait();
+
+            if (option.get().equals(ButtonType.OK)) {
+                String deleteData = "DELETE FROM item WHERE itemid=" + item_code_input.getText();
+
+                try {
+                    prepare = connect.prepareStatement(deleteData);
+                    prepare.executeUpdate();
+
+                    alert = new Alert(AlertType.INFORMATION);
+                    alert.setTitle("Sucess Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Sucessfully Deleted!");
+                    alert.showAndWait();
+
+                    itemDataShow();
+                    itemInputClear();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } else {
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Cancelled");
+                alert.showAndWait();
+
+            }
+        }
+    }
+
     public void itemInputClear() {
         item_name_input.setText("");
         barcode_input.setText("");
@@ -236,14 +589,16 @@ public class MainController implements Initializable {
         item_unit_input.getSelectionModel().clearSelection();
 
     }
-    
-    public void itemSelectData(){
-        
+
+    public void itemSelectData() {
+
         ItemData itemdata = item_table.getSelectionModel().getSelectedItem();
         int n = item_table.getSelectionModel().getSelectedIndex();
-        
-        if((n-1) < -1) return;
-        
+
+        if ((n - 1) < -1) {
+            return;
+        }
+
         item_code_input.setText(String.valueOf(itemdata.getItemid()));
         item_name_input.setText(itemdata.getItem_name());
         barcode_input.setText(String.valueOf(itemdata.getItem_barcode()));
@@ -251,7 +606,7 @@ public class MainController implements Initializable {
         item_discount_input.setText(String.valueOf(itemdata.getItem_discount()));
         alpha_search_input.setText(itemdata.getItem_alpha_search());
         item_unit_input.setValue(itemdata.getItem_unit_type());
-         
+
     }
 
     public ObservableList<ItemData> itemDataList() {
@@ -320,6 +675,7 @@ public class MainController implements Initializable {
         receiptList.add(receiptItem);
         System.out.println("Item added: " + receiptList.get(0).getPrice());
         displayReceiptItems();
+        displaySubTotal();
     }
 
     public void switchForm(ActionEvent event) {
@@ -506,9 +862,26 @@ public class MainController implements Initializable {
         stage.show();
     }
 
+    public Double calculateSubTotal() {
+        Double subTotal = 0.0;
+
+        for (int q = 0; q < receiptList.size(); q++) {
+            subTotal += receiptList.get(q).getTotalPrice();
+        }
+
+        return subTotal;
+    }
+
+    public void displaySubTotal() {
+        sub_total.setText(String.valueOf(calculateSubTotal()));
+        total.setText(String.valueOf(calculateSubTotal()));
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
+        displayStockCard();
+        userDisplayCard();
         itemUnitTypeList();
         menuDisplayCard();
         itemDataShow();

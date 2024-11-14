@@ -53,6 +53,8 @@ public class receipt_Data {
         return this.getPrice()* this.getQuantity();
     }
     
+    
+    
             
     
 }

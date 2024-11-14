@@ -10,9 +10,6 @@ package com.pos.possystem;
  */
 public class ItemData {
 
-    public ItemData() {
-    }
-    
     private Integer itemid;
     private String item_name;
     private Double item_price;
@@ -20,6 +17,7 @@ public class ItemData {
     private String item_unit_type;
     private String item_alpha_search;
     private Double item_discount;
+    private Integer item_stock;
     
     public ItemData(Integer itemid, String item_name, Double item_price, Integer item_barcode, String item_unit_type,
             String item_alpha_search, Double item_discount)
@@ -39,6 +37,14 @@ public class ItemData {
         this.item_name = item_name;
         this.item_price = item_price;
         this.item_unit_type = item_unit_type;
+    }
+    
+    public ItemData(Integer itemid,String item_name,String item_unit_type,Integer item_stock)
+    {
+        this.itemid = itemid;
+        this.item_name = item_name;
+        this.item_unit_type = item_unit_type;
+        this.item_stock = item_stock;
     }
     
     public void setItemid(Integer itemid){
@@ -94,6 +100,16 @@ public class ItemData {
     
     public Double getItem_discount(){
         return item_discount;
+    }
+    
+    public void setItem_stock(Integer item_stock)
+    {
+        this.item_stock = item_stock;
+    }
+    
+    public Integer getItem_stock()
+    {
+        return item_stock;
     }
         
 }

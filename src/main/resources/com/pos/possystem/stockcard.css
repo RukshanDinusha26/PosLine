@@ -1,0 +1,16 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.stock-card-cont{
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.shadow{
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5),5,0,0,0);
+}
+.progress-bar .bar {
+    -fx-background-color: linear-gradient(to bottom right, #FF8D00,#FFD900); 
+}

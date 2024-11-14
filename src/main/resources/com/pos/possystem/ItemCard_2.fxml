@@ -43,7 +43,7 @@
                   <Insets left="20.0" />
                </HBox.margin>
             </AnchorPane>
-            <TextField fx:id="item_qty" prefHeight="25.0" prefWidth="45.0">
+            <TextField fx:id="item_qty" prefHeight="25.0" prefWidth="45.0" text="1">
                <HBox.margin>
                   <Insets />
                </HBox.margin>

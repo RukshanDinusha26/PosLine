@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="75.0" prefWidth="850.0" stylesheets="@stockcard.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.possystem.StockCardController">
+   <children>
+      <Label fx:id="item_name" layoutX="39.0" layoutY="23.0" text="Item Name">
+         <font>
+            <Font name="Segoe UI Black" size="14.0" />
+         </font>
+      </Label>
+      <Label fx:id="item_id" layoutX="78.0" layoutY="44.0" prefHeight="17.0" prefWidth="77.0" text="ID">
+         <font>
+            <Font name="Segoe UI" size="12.0" />
+         </font></Label>
+      <ProgressBar fx:id="item_stock_progress" layoutX="553.0" layoutY="29.0" prefHeight="18.0" prefWidth="292.0" progress="1.0" AnchorPane.rightAnchor="55.0" />
+      <Label fx:id="item_stock" alignment="CENTER_RIGHT" layoutX="378.0" layoutY="30.0" prefHeight="17.0" prefWidth="45.0" text="Stock" textAlignment="RIGHT">
+         <font>
+            <Font name="Segoe UI" size="12.0" />
+         </font></Label>
+      <Label fx:id="item_unit_type" layoutX="425.0" layoutY="30.0" prefHeight="17.0" prefWidth="37.0" text="UNIT" AnchorPane.bottomAnchor="28.0" AnchorPane.topAnchor="30.0">
+         <font>
+            <Font name="Segoe UI" size="12.0" />
+         </font></Label>
+      <Label layoutX="39.0" layoutY="44.0" prefHeight="17.0" prefWidth="37.0" text="Code:">
+         <font>
+            <Font name="Segoe UI" size="12.0" />
+         </font></Label>
+      <Label layoutX="309.0" layoutY="31.0" text="Total Stock:">
+         <font>
+            <Font name="Segoe UI" size="12.0" />
+         </font>
+      </Label>
+   </children>
+   <styleClass>
+      <String fx:value="stock-card-cont" />
+      <String fx:value="shadow" />
+   </styleClass>
+</AnchorPane>

@@ -1,0 +1,18 @@
+/*
+ * Empty Stylesheet file.
+ */
+
+.delte-btn{
+    -fx-background-color: transparent;
+}
+
+.user-card-cont{
+    -fx-background-color: #ffffff;
+    -fx-border-radius: 5px;
+    -fx-background-radius: 5px;
+}
+
+.shadow{
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5),5,0,0,0);
+}
+
