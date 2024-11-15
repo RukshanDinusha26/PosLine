@@ -9,51 +9,54 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="66.0" prefWidth="900.0" styleClass="cardbackground" stylesheets="@itemcard_2.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.possystem.ItemCard_2Controller">
+<AnchorPane id="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minWidth="-Infinity" prefHeight="66.0" prefWidth="846.0" styleClass="cardbackground" stylesheets="@itemcard_2.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.possystem.ItemCard_2Controller">
    <children>
-      <HBox alignment="CENTER_LEFT" prefHeight="65.0" prefWidth="900.0" spacing="30.0" AnchorPane.leftAnchor="0.0">
+      <HBox alignment="CENTER_LEFT" prefHeight="65.0" prefWidth="846.0" spacing="30.0" AnchorPane.leftAnchor="0.0">
          <children>
             <Label fx:id="item_name" prefHeight="27.0" prefWidth="304.0" text="Item">
                <font>
-                  <Font name="Arial Black" size="18.0" />
+                  <Font name="Segoe UI Black" size="16.0" />
                </font>
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
             </Label>
-            <AnchorPane prefHeight="66.0" prefWidth="92.0">
+            <AnchorPane prefHeight="65.0" prefWidth="74.0">
                <children>
-                  <Label layoutX="46.0" layoutY="26.0" text="Rs./">
+                  <Label layoutX="14.0" layoutY="26.0" text="Rs./">
                      <font>
                         <Font name="Arial" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="qty_type" layoutX="63.0" layoutY="26.0" text="  Kg">
+                  <Label fx:id="qty_type" layoutX="32.0" layoutY="26.0" text="  Kg">
                      <font>
                         <Font name="Arial" size="12.0" />
                      </font>
                   </Label>
-                  <Label fx:id="item_price" layoutX="12.0" layoutY="26.0" text="400">
+                  <Label fx:id="item_price" alignment="CENTER_RIGHT" layoutX="-111.0" layoutY="25.0" prefHeight="18.0" prefWidth="107.0" text="400">
                      <font>
-                        <Font name="Arial" size="12.0" />
+                        <Font name="Segoe UI Bold" size="14.0" />
                      </font>
+                     <padding>
+                        <Insets right="5.0" />
+                     </padding>
                   </Label>
                </children>
                <HBox.margin>
                   <Insets left="20.0" />
                </HBox.margin>
             </AnchorPane>
-            <TextField fx:id="item_qty" prefHeight="25.0" prefWidth="45.0" text="1">
+            <TextField fx:id="item_qty" prefHeight="25.0" prefWidth="43.0" text="1">
                <HBox.margin>
                   <Insets />
                </HBox.margin>
             </TextField>
-            <Label fx:id="qty_type" text="Kg">
+            <Label fx:id="qty_type" prefHeight="15.0" prefWidth="41.0" text="Kg">
                <font>
                   <Font name="Arial" size="12.0" />
                </font>
             </Label>
-            <Label fx:id="discount" text="Discount">
+            <Label fx:id="discount" prefHeight="15.0" prefWidth="76.0" text="Discount">
                <font>
                   <Font name="Arial" size="12.0" />
                </font>
@@ -61,7 +64,7 @@
                   <Insets />
                </HBox.margin>
             </Label>
-            <Button fx:id="add_btn" mnemonicParsing="false" onAction="#handleAddButtonAction" styleClass="addbtn" text="+">
+            <Button fx:id="add_btn" mnemonicParsing="false" onAction="#handleAddButtonAction" prefHeight="53.0" prefWidth="96.0" styleClass="addbtn" text="+">
                <font>
                   <Font name="Arial Black" size="24.0" />
                </font>

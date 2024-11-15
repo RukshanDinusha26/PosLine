@@ -175,7 +175,13 @@ public class MainController implements Initializable {
 
     @FXML
     private Label total;
-    
+
+    @FXML
+    private TextField stock_input;
+
+    @FXML
+    private TextField stock_item_code_input;
+
     LocalDate currentDate = LocalDate.now();
 
     private static final String DB_URL = "jdbc:mysql://localhost/appdb";
@@ -192,6 +198,77 @@ public class MainController implements Initializable {
     private ObservableList<receipt_Data> receiptList = FXCollections.observableArrayList();
     private ObservableList<User_data> userList = FXCollections.observableArrayList();
     private ObservableList<ItemData> stockList = FXCollections.observableArrayList();
+
+    public void addStock() {
+        if (stock_item_code_input.getText().isEmpty()
+                || stock_input.getText().isEmpty()) {
+
+            alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Please Fill all Blank fields to update the stock");
+            alert.showAndWait();
+
+        } else {
+            String checkItemId = "SELECT itemid FROM stock WHERE itemid = "
+                    + stock_item_code_input.getText();
+
+            connect = database.connectDb();
+
+            try {
+                statement = connect.createStatement();
+                result = statement.executeQuery(checkItemId);
+
+                if (result.next()) {
+                    String updateItemStock = "UPDATE stock SET stock = stock + ? WHERE itemid = "
+                            + stock_item_code_input.getText();
+
+                    try {
+                        alert = new Alert(AlertType.CONFIRMATION);
+                        alert.setTitle("Error Message");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Are you sure you want to update the stock of item with the code: " + stock_item_code_input.getText() + "?");
+                        Optional<ButtonType> option = alert.showAndWait();
+
+                        if (option.get().equals(ButtonType.OK)) {
+
+                            prepare = connect.prepareStatement(updateItemStock);
+                            prepare.setString(1, stock_input.getText());
+
+                            prepare.executeUpdate();
+
+                            alert = new Alert(AlertType.INFORMATION);
+                            alert.setTitle("Sucess Message");
+                            alert.setHeaderText(null);
+                            alert.setContentText("Stock is Sucessfully Updated!");
+                            alert.showAndWait();
+
+                            displayStockCard();
+                            stock_item_code_input.clear();
+                            stock_input.clear();
+                            
+                        } else {
+                           
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+
+                } else {
+                    alert = new Alert(AlertType.ERROR);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("There is no item with Item Code: stock_item_code_input!");
+                    alert.showAndWait();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+
+    }
 
     public ObservableList<ItemData> stockDataList() {
         ObservableList<ItemData> listData = FXCollections.observableArrayList();
@@ -833,7 +910,7 @@ public class MainController implements Initializable {
 
                 receipt_grid.add(pane, column++, row);
 
-                GridPane.setMargin(pane, new Insets(5));
+                GridPane.setMargin(pane, new Insets(0));
             } catch (Exception e) {
                 e.printStackTrace();
             }

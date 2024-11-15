@@ -7,9 +7,11 @@
     -fx-background-color: #d7d7d7;
 }
 
+
+
 .search {
     -fx-background-radius: 50px;
-    -fx-background-color: #d7d7d7; /* Light grey background */
+    -fx-background-color: #ECECEC; /* Light grey background */
     -fx-padding: 5px; /* Padding inside the search bar */
     -fx-background-insets: 0;
     -fx-border-color: transparent; /* No border initially */
@@ -29,9 +31,7 @@
 }
 .nav-btn {
     -fx-background-color: transparent;
-    -fx-border-color: grey; /* Default text color */
-    -fx-border-width: 1.5px;
-    -fx-border-radius:10px; /* Border radius for rounded corners */
+ /* Border radius for rounded corners */
 }
 
 .logout-btn{
@@ -66,19 +66,25 @@
 }
 
 .pay-cont{
-    -fx-background-color: #a9a9a9;
+    -fx-background-color: #dedede;
 }
 
 .item-cont{
-    -fx-background-color: #ffffff;
     -fx-background-radius: 10px;
     -fx-border-radius: 10px;
+    -fx-background-color: #ffffff;
+}
+
+.cotainer{
+    -fx-background-radius: 10px;
+    -fx-border-radius: 10px;
+    -fx-backgroud-color: #ffffff;
 }
 
 /* Style the TableView */
 .table-view {
     -fx-background-color: transparent; /* White background for the table */
-    -fx-border-color: #f4f4f4;     /* Light grey border */
+    -fx-border-color: #d2d2d2;     /* Light grey border */
     -fx-border-radius: 10px;       /* Rounded corners for the table */
     -fx-border-width: 2px;         /* Border width */
     -fx-padding: 0;             /* Padding around the table */
@@ -86,7 +92,7 @@
 .table-view .column-header,
 .table-view .column-header .filler,
 .table-view .column-header-background .filler {
-    -fx-background-color: #f4f4f4;
+    -fx-background-color: #d2d2d2;
       -fx-background-insets: 0 0 0 0;  
 }
 /* Style the Table Headers */
