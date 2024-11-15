@@ -36,6 +36,8 @@ public class StockCardController implements Initializable {
     
     private ItemData item_data;
     
+    private final int maxStock = 20;
+    
     public void setData(ItemData item_data){
         this.item_data = item_data;
         
@@ -43,7 +45,32 @@ public class StockCardController implements Initializable {
         item_id.setText(String.valueOf(item_data.getItemid()));
         item_stock.setText(String.valueOf(item_data.getItem_stock()));
         item_unit_type.setText(item_data.getItem_unit_type());
+        
+        updateStockProgress(item_data.getItem_stock());
     }
+    
+    private void updateStockProgress(int currentStock) {
+        if (currentStock < 0) {
+            currentStock = 0;
+        }
+
+        double stockPercentage = Math.min((double) currentStock / maxStock, 1.0); 
+
+        item_stock_progress.setProgress(stockPercentage);
+        
+        item_stock_progress.getStyleClass().removeAll("low-stock", "medium-stock", "high-stock");
+
+        if (stockPercentage < 0.3) {
+            item_stock_progress.getStyleClass().add("low-stock"); 
+        } else if (stockPercentage < 0.7) {
+            item_stock_progress.getStyleClass().add("medium-stock");
+        } else {
+            item_stock_progress.getStyleClass().add("high-stock"); 
+        }
+        
+        // TO DO - make the maxStock changeble by the user.
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO

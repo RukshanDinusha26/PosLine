@@ -11,6 +11,14 @@
 .shadow{
     -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.5),5,0,0,0);
 }
-.progress-bar .bar {
+.medium-stock .bar {
     -fx-background-color: linear-gradient(to bottom right, #FF8D00,#FFD900); 
+}
+
+.low-stock .bar{
+    -fx-background-color: linear-gradient(to bottom right, #FF0000, #FF8D00);
+}
+
+.high-stock .bar {
+    -fx-background-color: linear-gradient(to bottom right, #00FF00, #00D900);
 }
