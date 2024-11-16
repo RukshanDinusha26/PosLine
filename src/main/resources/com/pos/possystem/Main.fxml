@@ -53,7 +53,7 @@
       </AnchorPane>
    </top>
    <left>
-      <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="75.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
+      <AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="548.0" prefWidth="75.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
          <children>
             <Button fx:id="sales_mode" layoutX="11.0" layoutY="42.0" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onAction="#switchForm" prefHeight="50.0" prefWidth="53.0" styleClass="nav-btn" textFill="#dad5d5">
                <font>
@@ -160,7 +160,7 @@
          <children>
             <HBox fx:id="sales_panel" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="825.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="432.0" HBox.hgrow="ALWAYS">
+                  <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="553.0" prefWidth="433.0" HBox.hgrow="ALWAYS">
                      <children>
                         <ScrollPane layoutY="38.0" prefHeight="515.0" prefWidth="433.0" AnchorPane.bottomAnchor="-3.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="38.0">
                            <content>
@@ -181,11 +181,12 @@
                                  </children>
                               </HBox>
                            </graphic></ToggleButton>
+                        <TextField fx:id="barcode_scanner_input" editable="false" layoutX="14.0" layoutY="12.0" visible="false" />
                      </children>
                   </AnchorPane>
                   <VBox maxHeight="1.7976931348623157E308" maxWidth="420.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="392.0" HBox.hgrow="ALWAYS">
                      <children>
-                        <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="526.0" prefWidth="392.0" style="-fx-background-color: white;">
+                        <AnchorPane maxHeight="500.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="312.0" prefWidth="392.0" style="-fx-background-color: white;" VBox.vgrow="ALWAYS">
                            <children>
                               <ScrollPane layoutX="1.0" layoutY="22.0" prefHeight="315.0" prefWidth="348.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="22.0">
                                  <content>
@@ -201,43 +202,88 @@
                               </ScrollPane>
                            </children>
                         </AnchorPane>
-                        <AnchorPane maxHeight="280.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="264.0" prefWidth="350.0" styleClass="pay-cont">
+                        <AnchorPane maxHeight="300.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="282.0" prefWidth="392.0" styleClass="pay-cont">
                            <children>
-                              <Button layoutX="161.0" layoutY="148.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="123.0" styleClass="payment" text="Payment" textFill="#f2efef" AnchorPane.bottomAnchor="29.0" AnchorPane.rightAnchor="16.0">
+                              <Button layoutX="227.0" layoutY="192.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="149.0" styleClass="payment" textFill="#f2efef" AnchorPane.bottomAnchor="33.0" AnchorPane.rightAnchor="16.0">
                                  <font>
                                     <Font name="Segoe UI Bold" size="16.0" />
                                  </font>
+                                 <graphic>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                       <children>
+                                          <FontIcon iconColor="WHITE" iconLiteral="fltfal-caret-right-24" iconSize="24" text="" textAlignment="CENTER" wrappingWidth="22.0" />
+                                          <Label text="Process Order" textFill="WHITE">
+                                             <font>
+                                                <Font name="Segoe UI Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                 </graphic>
                               </Button>
-                              <Label layoutX="17.0" layoutY="66.0" text="Discount">
+                              <Label layoutX="17.0" layoutY="48.0" text="Discount">
                                  <font>
                                     <Font name="Segoe UI Semilight" size="14.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="17.0" layoutY="35.0" text="Subtotal">
+                              <Label layoutX="17.0" layoutY="22.0" text="Subtotal">
                                  <font>
                                     <Font name="Segoe UI Semilight" size="14.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="sub_total" alignment="CENTER_RIGHT" layoutX="230.0" layoutY="34.0" prefHeight="21.0" prefWidth="140.0" text="00.00" AnchorPane.rightAnchor="22.0">
+                              <Label fx:id="sub_total" alignment="CENTER_RIGHT" layoutX="230.0" layoutY="20.0" prefHeight="21.0" prefWidth="140.0" text="00.00" AnchorPane.rightAnchor="22.0">
                                  <font>
                                     <Font name="Segoe UI Semilight" size="14.0" />
                                  </font>
                               </Label>
-                              <Label alignment="CENTER_RIGHT" layoutX="244.0" layoutY="66.0" prefHeight="21.0" prefWidth="126.0" text="0.00" AnchorPane.rightAnchor="22.0">
+                              <Label alignment="CENTER_RIGHT" layoutX="244.0" layoutY="45.0" prefHeight="21.0" prefWidth="126.0" text="0.00" AnchorPane.rightAnchor="22.0">
                                  <font>
                                     <Font name="Segoe UI Semilight" size="14.0" />
                                  </font>
                               </Label>
-                              <Label layoutX="17.0" layoutY="96.0" text="Total">
+                              <Label layoutX="17.0" layoutY="74.0" text="Total">
                                  <font>
                                     <Font name="Segoe UI Black" size="18.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="total" alignment="CENTER_RIGHT" layoutX="173.0" layoutY="86.0" prefHeight="38.0" prefWidth="197.0" text="0.00" textAlignment="RIGHT" AnchorPane.rightAnchor="22.0">
+                              <Label fx:id="total" alignment="CENTER_RIGHT" layoutX="173.0" layoutY="66.0" prefHeight="38.0" prefWidth="197.0" text="0.00" textAlignment="RIGHT" AnchorPane.rightAnchor="22.0">
                                  <font>
                                     <Font name="Segoe UI Black" size="18.0" />
                                  </font>
                               </Label>
+                              <Label layoutX="181.0" layoutY="120.0" text="Payed">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="16.0" />
+                                 </font>
+                              </Label>
+                              <Label layoutX="182.0" layoutY="154.0" text="Change">
+                                 <font>
+                                    <Font name="Segoe UI Semilight" size="14.0" />
+                                 </font>
+                              </Label>
+                              <TextField fx:id="payed_input" alignment="CENTER_RIGHT" layoutX="266.0" layoutY="117.0" onInputMethodTextChanged="#displayChange" prefHeight="25.0" prefWidth="108.0" promptText="00.00" AnchorPane.rightAnchor="18.0" />
+                              <Label fx:id="change_amount" alignment="CENTER_RIGHT" layoutX="243.0" layoutY="149.0" prefHeight="21.0" prefWidth="126.0" text="0.00" AnchorPane.rightAnchor="23.0">
+                                 <font>
+                                    <Font name="Segoe UI Semilight" size="14.0" />
+                                 </font>
+                              </Label>
+                              <Button layoutX="110.0" layoutY="191.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="91.0" style="-fx-background-color: #FF0000;" styleClass="payment" textFill="#f2efef" AnchorPane.bottomAnchor="34.0" AnchorPane.rightAnchor="191.0">
+                                 <font>
+                                    <Font name="Segoe UI Bold" size="16.0" />
+                                 </font>
+                                 <graphic>
+                                    <HBox alignment="CENTER_LEFT" prefHeight="100.0" prefWidth="200.0">
+                                       <children>
+                                          <FontIcon iconColor="WHITE" iconLiteral="fltfal-channel-dismiss-16" iconSize="24" wrappingWidth="32.0" />
+                                          <Label text="Clear" textFill="WHITE">
+                                             <font>
+                                                <Font name="Segoe UI Bold" size="14.0" />
+                                             </font>
+                                          </Label>
+                                       </children>
+                                    </HBox>
+                                 </graphic>
+                              </Button>
                            </children>
                         </AnchorPane>
                      </children>
@@ -343,7 +389,7 @@
                   </AnchorPane>
                </children>
             </VBox>
-            <HBox fx:id="stock_panel" prefHeight="550.0" prefWidth="825.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <HBox fx:id="stock_panel" prefHeight="550.0" prefWidth="825.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
                   <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" prefHeight="550.0" prefWidth="530.0" HBox.hgrow="ALWAYS">
                      <children>
@@ -456,13 +502,13 @@
                                           </AnchorPane>
                                           <AnchorPane layoutX="918.0" layoutY="9.0" prefHeight="167.0" prefWidth="274.0" styleClass="report-card" translateX="30.0">
                                              <children>
-                                                <FontIcon iconColor="WHITE" iconLiteral="fltfal-currency-dollar-rupee-24" iconSize="80" layoutX="14.0" layoutY="103.0" />
-                                                <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="113.0" layoutY="23.0" prefHeight="81.0" prefWidth="149.0" text="23,000" textAlignment="RIGHT" textFill="WHITE">
+                                                <FontIcon iconColor="WHITE" iconLiteral="fltfmz-text-bullet-list-square-warning-24" iconSize="80" layoutX="14.0" layoutY="103.0" />
+                                                <Label alignment="CENTER_RIGHT" contentDisplay="RIGHT" layoutX="113.0" layoutY="23.0" prefHeight="81.0" prefWidth="149.0" text="12" textAlignment="RIGHT" textFill="WHITE">
                                                    <font>
                                                       <Font name="Segoe UI Black" size="36.0" />
                                                    </font>
                                                 </Label>
-                                                <Label layoutX="20.0" layoutY="94.0" prefHeight="50.0" prefWidth="223.0" text="Monthly Income" textFill="WHITE">
+                                                <Label layoutX="20.0" layoutY="94.0" prefHeight="50.0" prefWidth="223.0" text="Low Stock Items" textFill="WHITE">
                                                    <font>
                                                       <Font name="Segoe UI Semibold" size="18.0" />
                                                    </font>

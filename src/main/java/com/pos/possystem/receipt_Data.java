@@ -51,10 +51,5 @@ public class receipt_Data {
     public double getTotalPrice()
     {
         return this.getPrice()* this.getQuantity();
-    }
-    
-    
-    
-            
-    
+    }        
 }

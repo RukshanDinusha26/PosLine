@@ -44,3 +44,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-border-width: 0.8px;
 }
 
+.log-btn {
+    -fx-background-color: transparent; /* Remove default background */
+    -fx-border-color: transparent transparent orange transparent; /* Set bottom border to orange */
+    -fx-border-width: 0 0 2px 0; /* Only bottom border is visible, with a thickness of 2px */
+    -fx-padding: 4px; /* Adjust padding if needed */
+}

@@ -78,6 +78,9 @@ public class MainController implements Initializable {
     private GridPane menu_gridPane;
 
     @FXML
+    private TextField barcode_scanner_input;
+
+    @FXML
     private GridPane user_grid_pane;
 
     @FXML
@@ -153,6 +156,12 @@ public class MainController implements Initializable {
     private TextField search_field;
 
     @FXML
+    private Label change_amount;
+
+    @FXML
+    private TextField payed_input;
+
+    @FXML
     private VBox itemContainer;
 
     @FXML
@@ -198,6 +207,46 @@ public class MainController implements Initializable {
     private ObservableList<receipt_Data> receiptList = FXCollections.observableArrayList();
     private ObservableList<User_data> userList = FXCollections.observableArrayList();
     private ObservableList<ItemData> stockList = FXCollections.observableArrayList();
+
+    public double getPayed() {
+        if (payed_input.getText().isEmpty()) {
+            return 0;
+        } else {
+            Double payed = Double.parseDouble(payed_input.getText());
+            return payed;
+        }
+
+    }
+
+    public double calculateChange() {
+
+        double payed = getPayed();
+
+        if (payed == 0.0) {
+            return 0.0;
+        } else {
+
+            double total = calculateSubTotal();
+
+            double change = payed - total;
+
+            return change;
+        }
+    }
+
+    public void displayChange() {
+
+        payed_input.textProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                Double change = calculateChange();
+                System.out.println(change);
+                change_amount.setText(String.format("%.2f", Math.max(change, 0)));
+            } catch (NumberFormatException e) {
+                // Handle invalid input (e.g., empty or non-numeric input)
+                change_amount.setText("0.00");
+            }
+        });
+    }
 
     public void addStock() {
         if (stock_item_code_input.getText().isEmpty()
@@ -246,9 +295,9 @@ public class MainController implements Initializable {
                             displayStockCard();
                             stock_item_code_input.clear();
                             stock_input.clear();
-                            
+
                         } else {
-                           
+
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -701,7 +750,7 @@ public class MainController implements Initializable {
 
             while (result.next()) {
                 itemData = new ItemData(result.getInt("Itemid"), result.getString("Name"), result.getDouble("Price"),
-                        result.getInt("Barcode"), result.getString("Unit_type"), result.getString("Alpha_search"),
+                        result.getString("Barcode"), result.getString("Unit_type"), result.getString("Alpha_search"),
                         result.getDouble("Discount"));
 
                 listData.add(itemData);
@@ -742,6 +791,27 @@ public class MainController implements Initializable {
 
         ObservableList listData = FXCollections.observableArrayList(typeL);
         item_unit_input.setItems(listData);
+
+    }
+
+    public void processBarcode(String barcode) {
+        ItemData item = fetchItemByBarcode(barcode);
+        if (item != null) {
+            int quantity = 1;
+            addItemToReceipt(item, quantity);
+        } else {
+            System.out.println("Item not found for barcode: " + barcode);
+        }
+    }
+
+    public ItemData fetchItemByBarcode(String barcode) {
+
+        for (ItemData item : cardListData) {
+            if (item.getItem_barcode().equals(barcode)) {
+                return item;
+            }
+        }
+        return null;
 
     }
 
@@ -952,6 +1022,7 @@ public class MainController implements Initializable {
     public void displaySubTotal() {
         sub_total.setText(String.valueOf(calculateSubTotal()));
         total.setText(String.valueOf(calculateSubTotal()));
+        displayChange();
     }
 
     @Override
@@ -962,6 +1033,10 @@ public class MainController implements Initializable {
         itemUnitTypeList();
         menuDisplayCard();
         itemDataShow();
+        displayChange();
+
+        double change = calculateChange();
+        System.out.println(change);
 
         toggle_btn.selectedProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue) {
@@ -972,6 +1047,12 @@ public class MainController implements Initializable {
                 menuDisplayCard(); // Load ItemCard1 layout
             }
 
+        });
+
+        barcode_scanner_input.setOnAction(event -> {
+            String barcode = barcode_scanner_input.getText();
+            processBarcode(barcode);
+            barcode_scanner_input.clear(); // Clear the field for the next input
         });
 
     }

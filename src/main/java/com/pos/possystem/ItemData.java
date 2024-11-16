@@ -13,13 +13,13 @@ public class ItemData {
     private Integer itemid;
     private String item_name;
     private Double item_price;
-    private Integer item_barcode;
+    private String item_barcode;
     private String item_unit_type;
     private String item_alpha_search;
     private Double item_discount;
     private Integer item_stock;
     
-    public ItemData(Integer itemid, String item_name, Double item_price, Integer item_barcode, String item_unit_type,
+    public ItemData(Integer itemid, String item_name, Double item_price, String item_barcode, String item_unit_type,
             String item_alpha_search, Double item_discount)
     {
         this.itemid = itemid;
@@ -70,11 +70,11 @@ public class ItemData {
         return item_price;
     }
     
-    public void setItem_barcode(Integer item_barcode){
+    public void setItem_barcode(String item_barcode){
         this.item_barcode = item_barcode;
     }
     
-    public Integer getItem_barcode(){
+    public String getItem_barcode(){
         return item_barcode;
     }
     
