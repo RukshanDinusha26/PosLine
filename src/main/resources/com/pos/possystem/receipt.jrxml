@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="226" pageHeight="566" columnWidth="186" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="ce629b1e-43e6-4e9b-8afc-7757b8774c4a">
+	<property name="ireport.zoom" value="1.771561000000001"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="getReceipt" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT receipt.date_time, receipt.sub_total, receipt.total_amount, receipt.pay_method, receipt.amount_payed, receipt.change_amount, receipt_items.quantity, receipt_items.total_price, item.Name,item.Unit_type,item.discount
+FROM receipt
+JOIN receipt_items ON  receipt.receipt_id = receipt_items.receipt_id
+JOIN item ON item.itemid = receipt_items.itemid
+WHERE receipt.receipt_id=$P{getReceipt};]]>
+	</queryString>
+	<field name="date_time" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="sub_total" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="total_amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pay_method" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="amount_payed" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="change_amount" class="java.math.BigDecimal">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="quantity" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="total_price" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Unit_type" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="discount" class="java.lang.Double">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="79" splitType="Stretch">
+			<staticText>
+				<reportElement x="57" y="28" width="72" height="17" uuid="f57353e9-f163-46f6-bd89-c17c912f283c"/>
+				<textElement>
+					<font fontName="Courier New" size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[POS LINE]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="47" y="45" width="109" height="18" uuid="1f4fad24-165b-4059-b6bd-a169c57a3c43"/>
+				<textElement>
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<text><![CDATA[by Java Juggler inc.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="25" y="0" width="70" height="12" uuid="b7c4c84b-56a0-4364-9b74-7eb7c96efe27"/>
+				<textElement>
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<text><![CDATA[Date and Time:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="95" y="0" width="91" height="12" uuid="3b2aacde-80b8-4838-9a04-3a8ef083a85e"/>
+				<textElement>
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{date_time}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="4" splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="42" splitType="Stretch">
+			<staticText>
+				<reportElement x="0" y="10" width="57" height="20" uuid="2d36b940-73d2-460b-8737-89ed32b711c4"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<text><![CDATA[Name]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="57" y="10" width="38" height="20" uuid="a218c1ca-189c-4811-a2b2-a9eb9b372756"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<text><![CDATA[Qty]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="0" width="0" height="20" uuid="e60996e3-6e88-4a62-aaba-77170463900d"/>
+				<text><![CDATA[]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="95" y="10" width="25" height="20" uuid="e27f9333-b169-42cb-8510-710077d7a50e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<text><![CDATA[off]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="10" width="66" height="20" uuid="2df333cf-db38-421f-be41-c7a9302e113d"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<text><![CDATA[Price]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="30" width="186" height="1" uuid="9609b502-ce8b-468f-823d-89032fece6b8"/>
+			</line>
+			<line>
+				<reportElement x="0" y="10" width="186" height="1" uuid="93e4030b-183b-48d0-9b1e-e8c894a76891"/>
+			</line>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="21" splitType="Stretch">
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="57" height="20" uuid="e6680921-bd8b-40e4-b121-eb99ffa2e304"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Courier New" size="8" isBold="false"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Name}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="57" y="0" width="12" height="20" uuid="a5b9c5b1-0ff6-4383-9651-131287f3a4df"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Courier New"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="69" y="0" width="11" height="20" uuid="54ab7585-b326-4438-bb14-60929e6743ff"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Unit_type}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="95" y="0" width="25" height="20" uuid="613a98f7-a651-4c8a-8166-f92b22a9295d"/>
+				<textElement verticalAlignment="Middle">
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{discount}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="120" y="0" width="66" height="20" uuid="a3a83bb7-26cb-4bdb-93f8-21d80bd85514"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_price}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="19" width="186" height="1" uuid="187f06e2-6512-482f-afad-c737480fc727"/>
+				<graphicElement>
+					<pen lineStyle="Dashed"/>
+				</graphicElement>
+			</line>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="83" splitType="Stretch">
+			<staticText>
+				<reportElement x="59" y="5" width="61" height="12" uuid="ff7ae5ac-43e8-4eec-9f94-00717c18446e"/>
+				<textElement>
+					<font fontName="Courier New" size="9"/>
+				</textElement>
+				<text><![CDATA[Subtotal]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="59" y="17" width="61" height="12" uuid="45b6e9da-4612-489d-95a9-9a56c3e74310"/>
+				<textElement>
+					<font fontName="Courier New" size="9"/>
+				</textElement>
+				<text><![CDATA[Discount]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="59" y="29" width="61" height="12" uuid="777f1429-f1da-4d33-84f6-c87bf84b8e27"/>
+				<textElement>
+					<font fontName="Courier New" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Total]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="41" width="61" height="12" uuid="0824b0e4-158c-4adc-ac18-385a46051806"/>
+				<textElement>
+					<font fontName="Courier New" size="9"/>
+				</textElement>
+				<text><![CDATA[Payed]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="120" y="5" width="66" height="12" uuid="3faae248-534e-45e8-b4b8-ed2026c86351"/>
+				<textElement textAlignment="Right">
+					<font fontName="Courier New" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{sub_total}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="29" width="66" height="12" uuid="1d6ee8dc-2cc3-46bb-b9c6-774197ccf9fb"/>
+				<textElement textAlignment="Right">
+					<font fontName="Courier New" size="9" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{total_amount}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="141" y="41" width="45" height="12" uuid="a2b10955-cd63-4d8d-9cfd-934525eca396"/>
+				<textElement textAlignment="Right">
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amount_payed}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="120" y="17" width="66" height="12" uuid="02ec3e1b-45f5-440f-9588-11e6fac26b9a"/>
+				<textElement textAlignment="Right">
+					<font fontName="Courier New" size="9"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{discount}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="80" y="53" width="61" height="12" uuid="33dedda2-cfcf-49e6-bbcf-81db9d8fcfed"/>
+				<textElement>
+					<font fontName="Courier New" size="9"/>
+				</textElement>
+				<text><![CDATA[Method]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="80" y="65" width="61" height="12" uuid="2cfd2179-f287-4816-8fb8-d2564fc52190"/>
+				<textElement>
+					<font fontName="Courier New" size="9"/>
+				</textElement>
+				<text><![CDATA[Change]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="141" y="53" width="45" height="12" uuid="591ae29d-10f1-4c12-b0ca-e9c7c59b52ed"/>
+				<textElement textAlignment="Right">
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{pay_method}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="141" y="65" width="45" height="12" uuid="6ef6e892-9baf-4a54-9b8b-1b02c8c53675"/>
+				<textElement textAlignment="Right">
+					<font fontName="Courier New" size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{change_amount}]]></textFieldExpression>
+			</textField>
+			<line>
+				<reportElement x="0" y="2" width="186" height="1" uuid="76362b14-3e69-4487-a2e3-59e56954b0c0"/>
+			</line>
+		</band>
+	</columnFooter>
+	<pageFooter>
+		<band height="51" splitType="Stretch">
+			<staticText>
+				<reportElement x="25" y="14" width="142" height="12" uuid="bbc2e43a-8012-45f3-938d-dc062b04b6f0"/>
+				<textElement>
+					<font fontName="Courier New" size="9"/>
+				</textElement>
+				<text><![CDATA[Thank you! See you Again. ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="44" y="30" width="112" height="12" uuid="0ac41bec-4229-4ea3-9e17-98a80d68c595"/>
+				<textElement>
+					<font fontName="Courier New" size="9"/>
+				</textElement>
+				<text><![CDATA[contact: 07887665j7]]></text>
+			</staticText>
+			<line>
+				<reportElement x="0" y="0" width="186" height="1" uuid="6c096085-a569-485f-8f29-c1c055af3a28"/>
+			</line>
+		</band>
+	</pageFooter>
+	<summary>
+		<band height="4" splitType="Stretch"/>
+	</summary>
+</jasperReport>

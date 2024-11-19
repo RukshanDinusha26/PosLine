@@ -204,7 +204,7 @@
                         </AnchorPane>
                         <AnchorPane maxHeight="300.0" maxWidth="1.7976931348623157E308" minWidth="-Infinity" prefHeight="282.0" prefWidth="392.0" styleClass="pay-cont">
                            <children>
-                              <Button layoutX="227.0" layoutY="192.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="149.0" styleClass="payment" textFill="#f2efef" AnchorPane.bottomAnchor="33.0" AnchorPane.rightAnchor="16.0">
+                              <Button fx:id="process_btn" layoutX="227.0" layoutY="192.0" mnemonicParsing="false" onAction="#addReceiptbtn" prefHeight="35.0" prefWidth="149.0" styleClass="payment" textFill="#f2efef" AnchorPane.bottomAnchor="33.0" AnchorPane.rightAnchor="16.0">
                                  <font>
                                     <Font name="Segoe UI Bold" size="16.0" />
                                  </font>
@@ -220,6 +220,9 @@
                                        </children>
                                     </HBox>
                                  </graphic>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
                               </Button>
                               <Label layoutX="17.0" layoutY="48.0" text="Discount">
                                  <font>
@@ -231,12 +234,12 @@
                                     <Font name="Segoe UI Semilight" size="14.0" />
                                  </font>
                               </Label>
-                              <Label fx:id="sub_total" alignment="CENTER_RIGHT" layoutX="230.0" layoutY="20.0" prefHeight="21.0" prefWidth="140.0" text="00.00" AnchorPane.rightAnchor="22.0">
+                              <Label fx:id="sub_total" alignment="CENTER_RIGHT" layoutX="230.0" layoutY="20.0" prefHeight="21.0" prefWidth="140.0" text="0.00" AnchorPane.rightAnchor="22.0">
                                  <font>
                                     <Font name="Segoe UI Semilight" size="14.0" />
                                  </font>
                               </Label>
-                              <Label alignment="CENTER_RIGHT" layoutX="244.0" layoutY="45.0" prefHeight="21.0" prefWidth="126.0" text="0.00" AnchorPane.rightAnchor="22.0">
+                              <Label fx:id="Discount" alignment="CENTER_RIGHT" layoutX="244.0" layoutY="45.0" prefHeight="21.0" prefWidth="126.0" text="0.00" AnchorPane.rightAnchor="22.0">
                                  <font>
                                     <Font name="Segoe UI Semilight" size="14.0" />
                                  </font>
@@ -261,13 +264,13 @@
                                     <Font name="Segoe UI Semilight" size="14.0" />
                                  </font>
                               </Label>
-                              <TextField fx:id="payed_input" alignment="CENTER_RIGHT" layoutX="266.0" layoutY="117.0" onInputMethodTextChanged="#displayChange" prefHeight="25.0" prefWidth="108.0" promptText="00.00" AnchorPane.rightAnchor="18.0" />
+                              <TextField fx:id="payed_input" alignment="CENTER_RIGHT" layoutX="266.0" layoutY="117.0" onInputMethodTextChanged="#displayChange" prefHeight="25.0" prefWidth="108.0" promptText="0.00" AnchorPane.rightAnchor="18.0" />
                               <Label fx:id="change_amount" alignment="CENTER_RIGHT" layoutX="243.0" layoutY="149.0" prefHeight="21.0" prefWidth="126.0" text="0.00" AnchorPane.rightAnchor="23.0">
                                  <font>
                                     <Font name="Segoe UI Semilight" size="14.0" />
                                  </font>
                               </Label>
-                              <Button layoutX="110.0" layoutY="191.0" mnemonicParsing="false" prefHeight="35.0" prefWidth="91.0" style="-fx-background-color: #FF0000;" styleClass="payment" textFill="#f2efef" AnchorPane.bottomAnchor="34.0" AnchorPane.rightAnchor="191.0">
+                              <Button layoutX="110.0" layoutY="191.0" mnemonicParsing="false" onAction="#clearbtn" prefHeight="35.0" prefWidth="91.0" style="-fx-background-color: #FF0000;" styleClass="payment" textFill="#f2efef" AnchorPane.bottomAnchor="34.0" AnchorPane.rightAnchor="191.0">
                                  <font>
                                     <Font name="Segoe UI Bold" size="16.0" />
                                  </font>
@@ -283,6 +286,9 @@
                                        </children>
                                     </HBox>
                                  </graphic>
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
                               </Button>
                            </children>
                         </AnchorPane>

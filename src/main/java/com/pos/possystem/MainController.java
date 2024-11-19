@@ -4,11 +4,16 @@
  */
 package com.pos.possystem;
 
+
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.Initializable;
 
+import net.sf.jasperreports.engine.design.JasperDesign;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -20,10 +25,12 @@ import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import javafx.collections.FXCollections;
@@ -47,6 +54,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperPrintManager;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.xml.JRXmlLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 public class MainController implements Initializable {
 
@@ -174,6 +188,9 @@ public class MainController implements Initializable {
     private TextField confirm_password;
 
     @FXML
+    private Button process_btn;
+
+    @FXML
     private Button logout_btn;
 
     @FXML
@@ -184,6 +201,9 @@ public class MainController implements Initializable {
 
     @FXML
     private Label total;
+
+    @FXML
+    private Label Discount;
 
     @FXML
     private TextField stock_input;
@@ -207,6 +227,114 @@ public class MainController implements Initializable {
     private ObservableList<receipt_Data> receiptList = FXCollections.observableArrayList();
     private ObservableList<User_data> userList = FXCollections.observableArrayList();
     private ObservableList<ItemData> stockList = FXCollections.observableArrayList();
+
+    public void addReceiptbtn() {
+        if (calculateSubTotal() == 0) {
+            alert = new Alert(AlertType.ERROR);
+            alert.setTitle("Error Message");
+            alert.setHeaderText(null);
+            alert.setContentText("Add items to Receipt to Process the Order!");
+            alert.showAndWait();
+        } else {
+            if (payed_input.getText().isEmpty() || Double.parseDouble(payed_input.getText()) <= calculateSubTotal()) {
+                alert = new Alert(AlertType.ERROR);
+                alert.setTitle("Error Message");
+                alert.setHeaderText(null);
+                alert.setContentText("Enter the right amount payed");
+                alert.showAndWait();
+                connect = database.connectDb();
+            } else {
+                try {
+                    alert = new Alert(AlertType.CONFIRMATION);
+                    alert.setTitle("Error Message");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Are you sure you want to process this order?");
+                    Optional<ButtonType> option = alert.showAndWait();
+
+                    if (option.get().equals(ButtonType.OK)) {
+
+                        String paymentMethod = "Cash";
+
+                        String receiptSql = "INSERT INTO receipt (sub_total, total_amount, pay_method,amount_payed,change_amount) VALUES(?,?,?,?,?);";
+
+                        prepare = connect.prepareStatement(receiptSql, statement.RETURN_GENERATED_KEYS);
+
+                        prepare.setDouble(1, calculateSubTotal());
+                        prepare.setDouble(2, calculateSubTotal());
+                        prepare.setString(3, paymentMethod);
+                        prepare.setDouble(4, Double.parseDouble(payed_input.getText()));
+                        prepare.setDouble(5, calculateChange());
+
+                        prepare.executeUpdate();
+
+                        ResultSet generatedKeys = prepare.getGeneratedKeys();
+                        int receiptId = 0;
+                        if (generatedKeys.next()) {
+                            receiptId = generatedKeys.getInt(1);
+                        }
+
+                        String itemSql = "INSERT INTO receipt_items (receipt_id,itemid,quantity,total_price)"
+                                + "VALUES(?,?,?,?);";
+
+                        prepare = connect.prepareStatement(itemSql);
+
+                        for (receipt_Data item : receiptList) {
+
+                            prepare.setInt(1, receiptId);
+                            prepare.setInt(2, item.getID());
+                            prepare.setInt(3, item.getQuantity());
+                            prepare.setDouble(4, item.getTotalPrice());
+                            prepare.addBatch();
+                        }
+                        prepare.executeBatch();
+
+                        HashMap map = new HashMap();
+                        map.put("getReceipt", receiptId);
+
+                        URL url = getClass().getResource("receipt.jrxml");
+                        
+                        JasperDesign jDesign = JRXmlLoader.load("\\C:\\Users\\Lenovo\\Documents\\PosSystem\\target\\classes\\com\\pos\\possystem\\receipt.jrxml");
+                        JasperReport jReport = JasperCompileManager.compileReport(jDesign);
+                        JasperPrint jPrint = JasperFillManager.fillReport(jReport, map, connect);
+
+                        /*JasperViewer.viewReport(jPrint, false);*/
+                        JasperPrintManager.printReport(jPrint, true);
+
+                        alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle("Sucess Message");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Order Processed Sucessfully!");
+                        alert.showAndWait();
+
+                        clearbtn();
+
+                    } else {
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+
+    }
+
+    public void clearbtn() {
+        receiptList.clear();
+        receipt_grid.getChildren().clear();
+        resetTotal();
+    }
+
+    public void resetTotal() {
+        sub_total.setText("0.00");
+        total.setText("0.00");
+        Discount.setText("0.00");
+        payed_input.setText("");
+        change_amount.setText("0.00");
+    }
 
     public double getPayed() {
         if (payed_input.getText().isEmpty()) {
@@ -236,16 +364,14 @@ public class MainController implements Initializable {
 
     public void displayChange() {
 
-        payed_input.textProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                Double change = calculateChange();
-                System.out.println(change);
-                change_amount.setText(String.format("%.2f", Math.max(change, 0)));
-            } catch (NumberFormatException e) {
-                // Handle invalid input (e.g., empty or non-numeric input)
-                change_amount.setText("0.00");
-            }
-        });
+        try {
+            Double change = calculateChange();
+            System.out.println(change);
+            change_amount.setText(String.format("%.2f", Math.max(change, 0)));
+        } catch (NumberFormatException e) {
+            // Handle invalid input (e.g., empty or non-numeric input)
+            change_amount.setText("0.00");
+        }
     }
 
     public void addStock() {
@@ -961,8 +1087,8 @@ public class MainController implements Initializable {
         }
     }
 
-    private void displayReceiptItems() {
-
+    public void displayReceiptItems() {
+        receipt_grid.getChildren().clear();
         int row = 0;
         int column = 0;
 
@@ -971,8 +1097,8 @@ public class MainController implements Initializable {
                 FXMLLoader load = new FXMLLoader(getClass().getResource("receiptCard.fxml"));
                 AnchorPane pane = load.load();
                 ReceiptCardController cardC = load.getController();
-                cardC.setData(receiptList.get(q));
-                System.out.println(receiptList.get(q).getQuantity());
+                cardC.setData(receiptList.get(q), receiptList);
+                cardC.setMainController(this);
                 if (column == 1) {
                     column = 0;
                     row += 1;
@@ -1047,6 +1173,10 @@ public class MainController implements Initializable {
                 menuDisplayCard(); // Load ItemCard1 layout
             }
 
+        });
+
+        payed_input.textProperty().addListener((observable, oldValue, newValue) -> {
+            displayChange();
         });
 
         barcode_scanner_input.setOnAction(event -> {
