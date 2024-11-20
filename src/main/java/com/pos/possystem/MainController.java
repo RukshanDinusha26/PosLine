@@ -4,14 +4,20 @@
  */
 package com.pos.possystem;
 
-
+import javafx.scene.Scene;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
+import javafx.scene.input.KeyCode;
 import javafx.fxml.Initializable;
+import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
+
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
 
 import net.sf.jasperreports.engine.design.JasperDesign;
 import javafx.fxml.FXML;
@@ -19,6 +25,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+
+import org.junit.jupiter.api.Test;
+import org.testfx.framework.junit5.ApplicationTest;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.sql.Connection;
 import java.sql.Date;
@@ -33,6 +43,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -50,6 +61,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
@@ -99,6 +111,9 @@ public class MainController implements Initializable {
 
     @FXML
     private GridPane stock_grid_pane;
+
+    @FXML
+    private BorderPane primary_stage;
 
     @FXML
     private ToggleButton toggle_btn;
@@ -213,6 +228,8 @@ public class MainController implements Initializable {
 
     LocalDate currentDate = LocalDate.now();
 
+    private StringBuilder barcodeBuffer = new StringBuilder();
+
     private static final String DB_URL = "jdbc:mysql://localhost/appdb";
     private static final String USER = "root";
     private static final String PASSWORD = "";
@@ -230,13 +247,14 @@ public class MainController implements Initializable {
 
     public void addReceiptbtn() {
         if (calculateSubTotal() == 0) {
+
             alert = new Alert(AlertType.ERROR);
             alert.setTitle("Error Message");
             alert.setHeaderText(null);
             alert.setContentText("Add items to Receipt to Process the Order!");
             alert.showAndWait();
         } else {
-            if (payed_input.getText().isEmpty() || Double.parseDouble(payed_input.getText()) <= calculateSubTotal()) {
+            if (payed_input.getText().isEmpty() || Double.parseDouble(payed_input.getText()) < calculateSubTotal()) {
                 alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error Message");
                 alert.setHeaderText(null);
@@ -292,13 +310,20 @@ public class MainController implements Initializable {
                         map.put("getReceipt", receiptId);
 
                         URL url = getClass().getResource("receipt.jrxml");
-                        
+
                         JasperDesign jDesign = JRXmlLoader.load("\\C:\\Users\\Lenovo\\Documents\\PosSystem\\target\\classes\\com\\pos\\possystem\\receipt.jrxml");
                         JasperReport jReport = JasperCompileManager.compileReport(jDesign);
                         JasperPrint jPrint = JasperFillManager.fillReport(jReport, map, connect);
 
+                        PrintService selectedPrinter = PrintServiceLookup.lookupDefaultPrintService();
+                        if (selectedPrinter != null) {
+                            System.out.println("Selected Printer: " + selectedPrinter.getName());
+                        } else {
+                            System.out.println("No default printer set!");
+                        }
+
                         /*JasperViewer.viewReport(jPrint, false);*/
-                        JasperPrintManager.printReport(jPrint, true);
+                        JasperPrintManager.printReport(jPrint, false);
 
                         alert = new Alert(AlertType.INFORMATION);
                         alert.setTitle("Sucess Message");
@@ -719,6 +744,7 @@ public class MainController implements Initializable {
 
                     itemDataShow();
                     itemInputClear();
+                    displayStockCard();
 
                 }
             } catch (Exception e) {
@@ -920,6 +946,7 @@ public class MainController implements Initializable {
 
     }
 
+    /*
     public void processBarcode(String barcode) {
         ItemData item = fetchItemByBarcode(barcode);
         if (item != null) {
@@ -928,11 +955,11 @@ public class MainController implements Initializable {
         } else {
             System.out.println("Item not found for barcode: " + barcode);
         }
-    }
-
+    }*/
     public ItemData fetchItemByBarcode(String barcode) {
 
-        for (ItemData item : cardListData) {
+        for (ItemData item : itemListData) {
+            System.out.println(item.getItem_barcode());
             if (item.getItem_barcode().equals(barcode)) {
                 return item;
             }
@@ -1052,6 +1079,59 @@ public class MainController implements Initializable {
         }
     }
 
+    public void searchItems(String query) {
+        cardListData.clear();
+
+        // Filter cardListData based on the search query (by name, barcode, or ID)
+        cardListData.addAll(filterItems(query));
+
+        // Clear the grid and its constraints
+        menu_gridPane.getChildren().clear();
+        menu_gridPane.getRowConstraints().clear();
+        menu_gridPane.getColumnConstraints().clear();
+
+        int row = 0;
+        int column = 0;
+
+        // Add filtered items to the grid
+        for (int q = 0; q < cardListData.size(); q++) {
+            try {
+                FXMLLoader load = new FXMLLoader(getClass().getResource("ItemCard_2.fxml"));
+                AnchorPane pane = load.load();
+                ItemCard_2Controller cardC = load.getController();
+                cardC.setData(cardListData.get(q));
+                cardC.setMainController(this);
+
+                if (column == 1) {
+                    column = 0;
+                    row += 1;
+                }
+
+                menu_gridPane.add(pane, column++, row);
+                GridPane.setMargin(pane, new Insets(10));
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private List<ItemData> filterItems(String query) {
+        List<ItemData> filteredItems = new ArrayList<>();
+
+        if (query != null && !query.isEmpty()) {
+            for (ItemData item : itemListData) {  // Assuming 'allItemsData' is your full item list
+                String searchQueryLower = query.toLowerCase();
+                if (item.getItem_name().toLowerCase().contains(searchQueryLower)
+                        || item.getItem_barcode().contains(searchQueryLower)
+                        || String.valueOf(item.getItemid()).contains(searchQueryLower)
+                        || item.getItem_alpha_search().toLowerCase().contains(searchQueryLower)) {
+                    filteredItems.add(item);
+                }
+            }
+        }
+        return filteredItems;
+    }
+
     public void menuDisplayCard() {
 
         cardListData.clear();
@@ -1110,6 +1190,13 @@ public class MainController implements Initializable {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    private void onKeyPressed(KeyEvent event) {
+        if (event.getCode() == KeyCode.ENTER) {
+            // Print message when Enter key is pressed
+            System.out.println("Enter key was pressed!");
         }
     }
 
@@ -1179,11 +1266,61 @@ public class MainController implements Initializable {
             displayChange();
         });
 
-        barcode_scanner_input.setOnAction(event -> {
-            String barcode = barcode_scanner_input.getText();
-            processBarcode(barcode);
-            barcode_scanner_input.clear(); // Clear the field for the next input
+        primary_stage.setOnMouseClicked(event -> {
+            if (!search_field.isFocused()) {
+                primary_stage.requestFocus();
+            }
         });
 
+        search_field.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (search_field.getText().isEmpty()) {
+                menuDisplayCard();
+            } else {
+                searchItems(newValue);
+            }
+        });
+
+        setupBarcodeScannerListener();
+
     }
+
+    private void setupBarcodeScannerListener() {
+        Platform.runLater(() -> {
+            Stage primaryStage = (Stage) primary_stage.getScene().getWindow(); // Obtain the primary stage
+            Scene scene = primaryStage.getScene();
+
+            scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+                if (search_field.isFocused()) {
+                    return;
+                }
+                if (event.getCode() == KeyCode.ENTER) {
+
+                    String scannedBarcode = barcodeBuffer.toString();
+                    System.out.println("Scanned barcode is =" + scannedBarcode);
+
+                    barcodeBuffer.delete(0, barcodeBuffer.length());
+                    System.out.println("Empty barcode is =" + barcodeBuffer.toString());
+                    processBarcode(scannedBarcode);
+
+                } else {
+
+                    barcodeBuffer.append(event.getText());
+                }
+            });
+        });
+    }
+
+    private void processBarcode(String barcode) {
+        System.out.println("Scanned Barcode: " + barcode);
+
+        // Check if the item exists and add it to the receipt
+        ItemData item = fetchItemByBarcode(barcode);
+        if (item != null) {
+            int quantity = 1; // Default quantity for barcode scan
+            addItemToReceipt(item, quantity);
+        } else {
+            System.out.println("Item not found for barcode: " + barcode);
+        }
+    }
+
 }

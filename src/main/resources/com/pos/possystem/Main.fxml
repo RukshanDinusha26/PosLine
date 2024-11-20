@@ -23,7 +23,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<BorderPane cacheShape="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="@main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.possystem.MainController">
+<BorderPane fx:id="primary_stage" cacheShape="false" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" stylesheets="@main.css" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.pos.possystem.MainController">
    <top>
       <AnchorPane maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" prefWidth="900.0" style="-fx-background-color: white;" BorderPane.alignment="CENTER">
          <children>
@@ -181,7 +181,6 @@
                                  </children>
                               </HBox>
                            </graphic></ToggleButton>
-                        <TextField fx:id="barcode_scanner_input" editable="false" layoutX="14.0" layoutY="12.0" visible="false" />
                      </children>
                   </AnchorPane>
                   <VBox maxHeight="1.7976931348623157E308" maxWidth="420.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="392.0" HBox.hgrow="ALWAYS">

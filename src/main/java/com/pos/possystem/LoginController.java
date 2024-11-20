@@ -21,6 +21,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.TextField;
+import static javafx.scene.input.KeyCode.ENTER;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
@@ -49,57 +50,58 @@ public class LoginController implements Initializable {
     @FXML
     private TextField password;
     
+   private StringBuilder barcodeBuffer = new StringBuilder();
+
     // DB TOOLS
-    
     private Connection connect;
     private PreparedStatement prepare;
     private ResultSet result;
-    
-    public void login(){
-        
+
+    public void login() {
+
         String sql = "SELECT * FROM User WHERE user_id = ? and password = ?";
-        
+
         connect = database.connectDb();
-        
-        try{
+
+        try {
             Alert alert;
             prepare = connect.prepareStatement(sql);
             prepare.setString(1, user_id.getText());
             prepare.setString(2, password.getText());
-            
+
             result = prepare.executeQuery();
-            
-            if(user_id.getText().isEmpty() || password.getText().isEmpty()){
+
+            if (user_id.getText().isEmpty() || password.getText().isEmpty()) {
                 alert = new Alert(AlertType.ERROR);
                 alert.setTitle("Error Message");
                 alert.setHeaderText(null);
                 alert.setContentText("Please fill all blank fields");
                 alert.showAndWait();
-            }else{
-                if(result.next()){
+            } else {
+                if (result.next()) {
                     // GET USER ID 
                     Data.userID = user_id.getText();
                     //PROCEED TO HOME
-                    
+
                     alert = new Alert(AlertType.INFORMATION);
                     alert.setTitle("Information Message");
                     alert.setHeaderText(null);
                     alert.setContentText("Successfully Login");
                     alert.showAndWait();
-                    
+
                     // HIDE LOGIN PAGE
                     loginBtn.getScene().getWindow().hide();
-                    
+
                     // GET HOME PAGE
                     Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
                     Stage stage = new Stage();
                     Scene scene = new Scene(root);
-                    
+
                     stage.setFullScreen(true);
                     stage.setFullScreenExitHint("");
                     stage.setScene(scene);
                     stage.show();
-                       
+
                     Platform.runLater(() -> stage.requestFocus());
                     // Add a listener to handle when the user exits full-screen mode
                     stage.fullScreenProperty().addListener((obs, wasFullScreen, isNowFullScreen) -> {
@@ -108,8 +110,8 @@ public class LoginController implements Initializable {
                             stage.centerOnScreen();
                         }
                     });
-                    
-                }else{
+
+                } else {
                     alert = new Alert(AlertType.ERROR);
                     alert.setTitle("Error Message");
                     alert.setHeaderText(null);
@@ -117,17 +119,21 @@ public class LoginController implements Initializable {
                     alert.showAndWait();
                 }
             }
-        }catch(Exception e){e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
     
-    public void close(){
+    public void close() {
         System.exit(0);
     }
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO
-    }    
-     @FXML
+    }
+
+    @FXML
     private void switchToSecondary() throws IOException {
         App.setRoot("login");
     }
