@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e1c290e9-befc-4110-8f51-0d3a888249f7">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="e1c290e9-befc-4110-8f51-0d3a888249f7">
 	<property name="ireport.zoom" value="1.0"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="144"/>
+	<property name="ireport.y" value="44"/>
 	<parameter name="current_date" class="java.lang.String"/>
-	<queryString language="SQL">
-		<![CDATA[SELECT receipt_id,date_time,sub_total,total_amount,pay_method,amount_payed,change_amount FROM receipt]]>
+	<queryString>
+		<![CDATA[SELECT receipt_id,date_time,DATE_FORMAT(date_time,'%H:%i') AS time,sub_total,total_amount,pay_method,amount_payed,change_amount FROM receipt
+WHERE DATE(date_time) = $P{current_date};]]>
 	</queryString>
 	<field name="receipt_id" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
@@ -13,6 +14,7 @@
 	<field name="date_time" class="java.sql.Timestamp">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
+	<field name="time" class="java.lang.String"/>
 	<field name="sub_total" class="java.math.BigDecimal">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
@@ -120,13 +122,6 @@
 				<text><![CDATA[Receipt ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="159" y="2" width="100" height="20" uuid="bcc82e7b-5ae6-4ff5-ba73-53cda24f4873"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font fontName="Arial" size="11" isBold="true"/>
-				</textElement>
-				<text><![CDATA[Time]]></text>
-			</staticText>
-			<staticText>
 				<reportElement x="320" y="2" width="100" height="20" uuid="c4cc9511-1245-42ed-94c3-a40ea1898b19"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font fontName="Arial" size="11" isBold="true"/>
@@ -140,6 +135,13 @@
 				</textElement>
 				<text><![CDATA[Payment Method]]></text>
 			</staticText>
+			<staticText>
+				<reportElement x="181" y="2" width="100" height="20" uuid="34e20dd9-8f16-48b4-9a34-73d9915fcc30"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font fontName="Arial" size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Time]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
@@ -150,13 +152,6 @@
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{receipt_id}]]></textFieldExpression>
-			</textField>
-			<textField>
-				<reportElement x="122" y="5" width="122" height="20" uuid="2bf12ebf-d297-4eae-851b-c3937db2c792"/>
-				<textElement textAlignment="Right">
-					<font fontName="Arial"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$F{date_time}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="304" y="5" width="132" height="20" uuid="006b4f32-e0f5-4c65-b83c-e29cb652fd73"/>
@@ -171,6 +166,13 @@
 					<font fontName="Arial"/>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{pay_method}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="181" y="5" width="100" height="20" uuid="a9aae1fd-9f5a-4d56-8d52-aadfcd895319"/>
+				<textElement textAlignment="Center">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{time}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

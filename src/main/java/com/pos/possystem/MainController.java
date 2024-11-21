@@ -438,18 +438,12 @@ public class MainController implements Initializable {
     public void generateDailyReport(){
                     try{
                         HashMap map = new HashMap();
-                        map.put("current_date", currentDate);
+                        map.put("current_date", String.valueOf(currentDate));
 
                         JasperDesign jDesign = JRXmlLoader.load("\\C:\\Users\\Lenovo\\Documents\\PosSystem\\target\\classes\\com\\pos\\possystem\\dailyReport.jrxml");
                         JasperReport jReport = JasperCompileManager.compileReport(jDesign);
                         JasperPrint jPrint = JasperFillManager.fillReport(jReport, map, connect);
 
-                        PrintService selectedPrinter = PrintServiceLookup.lookupDefaultPrintService();
-                        if (selectedPrinter != null) {
-                            System.out.println("Selected Printer: " + selectedPrinter.getName());
-                        } else {
-                            System.out.println("No default printer set!");
-                        }
 
                         JasperViewer.viewReport(jPrint, false);
                                 }
@@ -535,8 +529,8 @@ public class MainController implements Initializable {
                             System.out.println("No default printer set!");
                         }
 
-                        /*JasperViewer.viewReport(jPrint, false);*/
-                        JasperPrintManager.printReport(jPrint, false);
+                        JasperViewer.viewReport(jPrint, false);
+                        /*JasperPrintManager.printReport(jPrint, false);*/
 
                         alert = new Alert(AlertType.INFORMATION);
                         alert.setTitle("Sucess Message");
