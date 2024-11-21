@@ -10,6 +10,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -49,9 +51,11 @@ public class LoginController implements Initializable {
 
     @FXML
     private TextField password;
-    
-   private StringBuilder barcodeBuffer = new StringBuilder();
 
+    private StringBuilder barcodeBuffer = new StringBuilder();
+
+    private String adminU = "1265";
+    private String adminP = "2001";
     // DB TOOLS
     private Connection connect;
     private PreparedStatement prepare;
@@ -59,71 +63,99 @@ public class LoginController implements Initializable {
 
     public void login() {
 
-        String sql = "SELECT * FROM User WHERE user_id = ? and password = ?";
-
-        connect = database.connectDb();
-
-        try {
-            Alert alert;
-            prepare = connect.prepareStatement(sql);
-            prepare.setString(1, user_id.getText());
-            prepare.setString(2, password.getText());
-
-            result = prepare.executeQuery();
-
-            if (user_id.getText().isEmpty() || password.getText().isEmpty()) {
-                alert = new Alert(AlertType.ERROR);
-                alert.setTitle("Error Message");
+        if (user_id.getText().equals(adminU) && password.getText().equals(adminP)) {
+            try {
+                UserSession session = UserSession.getInstance();
+                session.setUsername("admin");
+                session.setRole("admin");
+                
+                
+                Alert alert = new Alert(AlertType.INFORMATION);
+                alert.setTitle("Information Message");
                 alert.setHeaderText(null);
-                alert.setContentText("Please fill all blank fields");
+                alert.setContentText("Successfull admin Login");
                 alert.showAndWait();
-            } else {
-                if (result.next()) {
-                    // GET USER ID 
-                    Data.userID = user_id.getText();
-                    //PROCEED TO HOME
+                directHome();
+            } catch (IOException ex) {
+                Logger.getLogger(LoginController.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else {
 
-                    alert = new Alert(AlertType.INFORMATION);
-                    alert.setTitle("Information Message");
-                    alert.setHeaderText(null);
-                    alert.setContentText("Successfully Login");
-                    alert.showAndWait();
+            String sql = "SELECT * FROM User WHERE user_id = ? and password = ?";
 
-                    // HIDE LOGIN PAGE
-                    loginBtn.getScene().getWindow().hide();
+            connect = database.connectDb();
 
-                    // GET HOME PAGE
-                    Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
-                    Stage stage = new Stage();
-                    Scene scene = new Scene(root);
+            try {
+                Alert alert;
+                prepare = connect.prepareStatement(sql);
+                prepare.setString(1, user_id.getText());
+                prepare.setString(2, password.getText());
 
-                    stage.setFullScreen(true);
-                    stage.setFullScreenExitHint("");
-                    stage.setScene(scene);
-                    stage.show();
+                result = prepare.executeQuery();
 
-                    Platform.runLater(() -> stage.requestFocus());
-                    // Add a listener to handle when the user exits full-screen mode
-                    stage.fullScreenProperty().addListener((obs, wasFullScreen, isNowFullScreen) -> {
-                        if (!isNowFullScreen) {
-                            // Center the window after exiting full-screen mode
-                            stage.centerOnScreen();
-                        }
-                    });
-
-                } else {
+                if (user_id.getText().isEmpty() || password.getText().isEmpty()) {
                     alert = new Alert(AlertType.ERROR);
                     alert.setTitle("Error Message");
                     alert.setHeaderText(null);
-                    alert.setContentText("Wrong UserID/Password");
+                    alert.setContentText("Please fill all blank fields");
                     alert.showAndWait();
+                } else {
+                    if (result.next()) {
+                        // GET USER ID 
+                        Data.userID = user_id.getText();
+                        
+                        UserSession session = UserSession.getInstance();
+                        session.setUsername("cashier");
+                        session.setRole("cashier");
+                        
+                        //PROCEED TO HOME
+
+                        alert = new Alert(AlertType.INFORMATION);
+                        alert.setTitle("Information Message");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Successfull Cashier Login");
+                        alert.showAndWait();
+
+                        // GET HOME PAGE
+                        directHome();
+
+                    } else {
+                        alert = new Alert(AlertType.ERROR);
+                        alert.setTitle("Error Message");
+                        alert.setHeaderText(null);
+                        alert.setContentText("Wrong UserID/Password");
+                        alert.showAndWait();
+                    }
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
         }
     }
-    
+
+    public void directHome() throws IOException {
+        loginBtn.getScene().getWindow().hide();
+
+        // GET HOME PAGE
+        Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
+        Stage stage = new Stage();
+        Scene scene = new Scene(root);
+
+        stage.setFullScreen(true);
+        stage.setFullScreenExitHint("");
+        stage.setScene(scene);
+        stage.show();
+
+        Platform.runLater(() -> stage.requestFocus());
+        // Add a listener to handle when the user exits full-screen mode
+        stage.fullScreenProperty().addListener((obs, wasFullScreen, isNowFullScreen) -> {
+            if (!isNowFullScreen) {
+                // Center the window after exiting full-screen mode
+                stage.centerOnScreen();
+            }
+        });
+    }
+
     public void close() {
         System.exit(0);
     }

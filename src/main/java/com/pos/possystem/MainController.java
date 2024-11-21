@@ -37,6 +37,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -51,6 +52,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.geometry.Insets;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -92,7 +95,13 @@ public class MainController implements Initializable {
     private Button item_delete_btn;
 
     @FXML
+    private Label transaction_count;
+
+    @FXML
     private TextField item_discount_input;
+
+    @FXML
+    private LineChart<?, ?> income_chart;
 
     @FXML
     private TextField item_name_input;
@@ -224,7 +233,20 @@ public class MainController implements Initializable {
     private TextField stock_input;
 
     @FXML
+    private Label today_income;
+
+    @FXML
+    private Label monthly_income;
+
+    @FXML
+    private Label low_stock;
+
+    @FXML
     private TextField stock_item_code_input;
+
+    private String currentMode = "sales_mode";
+
+    private String count;
 
     LocalDate currentDate = LocalDate.now();
 
@@ -244,6 +266,197 @@ public class MainController implements Initializable {
     private ObservableList<receipt_Data> receiptList = FXCollections.observableArrayList();
     private ObservableList<User_data> userList = FXCollections.observableArrayList();
     private ObservableList<ItemData> stockList = FXCollections.observableArrayList();
+
+    public void displayIncomeChart() {
+        income_chart.getData().clear();
+        income_chart.setLegendVisible(false);
+
+        String sql = "SELECT DATE(date_time),SUM(total_amount) FROM receipt GROUP BY YEAR(DATE(date_time)), MONTH(DATE(date_time));";
+        connect = database.connectDb();
+        XYChart.Series chart = new XYChart.Series();
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy MMMM"); // Format for year and month name
+
+            while (result.next()) {
+                // Parse the date and format it as "yyyy MMMM" (e.g., "2024 November")
+                Date date = result.getDate(1);
+                String formattedDate = dateFormat.format(date);
+
+                // Add the formatted date and total income to the chart
+                chart.getData().add(new XYChart.Data<>(formattedDate, result.getFloat(2)));
+            }
+
+            income_chart.getData().add(chart);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public String calculateLowStockItems() {
+
+        int stockThreshold = 5;
+        String sql = "SELECT COUNT(*) AS lowStockCount FROM stock WHERE stock <= ?";
+
+        connect = database.connectDb();
+        String lowStockCount = "0";
+
+        try {
+            prepare = connect.prepareStatement(sql);
+            prepare.setInt(1, stockThreshold);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+                lowStockCount = String.valueOf(result.getInt("lowStockCount"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return lowStockCount;
+    }
+
+    public void displayLowStockItems() {
+        String lowStockCount = calculateLowStockItems();
+
+        low_stock.setText(lowStockCount);
+    }
+
+    public String calculateMonthlyIncome() {
+        String sql = "SELECT SUM(total_amount) AS income FROM receipt "
+                + "WHERE YEAR(date_time) = YEAR(CURDATE()) "
+                + "AND MONTH(date_time) = MONTH(CURDATE());";
+
+        connect = database.connectDb();
+        String income = "0.00";
+
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+                income = String.valueOf(result.getDouble("income")); // Get income as a double
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return income;
+    }
+
+    public void displayMonthlyIncome() {
+        String monthlyIncome = calculateMonthlyIncome();
+
+        // Assuming `monthly_income_label` is the UI component to display monthly income
+        monthly_income.setText("Rs. " + monthlyIncome);
+    }
+
+    public String calculateTodayIncome() {
+        String sql = "SELECT SUM(total_amount) AS income FROM receipt WHERE DATE(date_time) = CURDATE();";
+
+        connect = database.connectDb();
+        String income = "0.00"; // Default to 0 in case no transactions are found
+
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+                income = String.valueOf(result.getDouble("income")); // Get income as a double
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return income;
+    }
+
+    public void displayTodayIncome() {
+        String income = calculateTodayIncome();
+
+        // Assuming `income_label` is the UI component to display today's income
+        today_income.setText("Rs. " + income);
+    }
+
+    public String calculateTodayTransactions() {
+        String sql = "SELECT COUNT(*) AS count FROM receipt WHERE DATE(date_time) = '"
+                + currentDate + "';";
+
+        connect = database.connectDb();
+
+        try {
+            prepare = connect.prepareStatement(sql);
+            result = prepare.executeQuery();
+
+            while (result.next()) {
+                count = String.valueOf(result.getInt("count"));
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return count;
+    }
+
+    public void displayTodayTransactions() {
+        String count = calculateTodayTransactions();
+
+        transaction_count.setText(count);
+
+    }
+    
+    
+    public void generateMonthlyReport(){
+                    try{
+                        HashMap map = new HashMap();
+                        map.put("current_date", currentDate);
+
+                        JasperDesign jDesign = JRXmlLoader.load("\\C:\\Users\\Lenovo\\Documents\\PosSystem\\target\\classes\\com\\pos\\possystem\\dailyReport.jrxml");
+                        JasperReport jReport = JasperCompileManager.compileReport(jDesign);
+                        JasperPrint jPrint = JasperFillManager.fillReport(jReport, map, connect);
+
+                        PrintService selectedPrinter = PrintServiceLookup.lookupDefaultPrintService();
+                        if (selectedPrinter != null) {
+                            System.out.println("Selected Printer: " + selectedPrinter.getName());
+                        } else {
+                            System.out.println("No default printer set!");
+                        }
+
+                        JasperViewer.viewReport(jPrint, false);
+                                }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
+    }
+    
+    public void generateDailyReport(){
+                    try{
+                        HashMap map = new HashMap();
+                        map.put("current_date", currentDate);
+
+                        JasperDesign jDesign = JRXmlLoader.load("\\C:\\Users\\Lenovo\\Documents\\PosSystem\\target\\classes\\com\\pos\\possystem\\dailyReport.jrxml");
+                        JasperReport jReport = JasperCompileManager.compileReport(jDesign);
+                        JasperPrint jPrint = JasperFillManager.fillReport(jReport, map, connect);
+
+                        PrintService selectedPrinter = PrintServiceLookup.lookupDefaultPrintService();
+                        if (selectedPrinter != null) {
+                            System.out.println("Selected Printer: " + selectedPrinter.getName());
+                        } else {
+                            System.out.println("No default printer set!");
+                        }
+
+                        JasperViewer.viewReport(jPrint, false);
+                                }
+                    catch(Exception e){
+                        e.printStackTrace();
+                    }
+    }
 
     public void addReceiptbtn() {
         if (calculateSubTotal() == 0) {
@@ -270,7 +483,7 @@ public class MainController implements Initializable {
                     Optional<ButtonType> option = alert.showAndWait();
 
                     if (option.get().equals(ButtonType.OK)) {
-
+                        
                         String paymentMethod = "Cash";
 
                         String receiptSql = "INSERT INTO receipt (sub_total, total_amount, pay_method,amount_payed,change_amount) VALUES(?,?,?,?,?);";
@@ -332,6 +545,7 @@ public class MainController implements Initializable {
                         alert.showAndWait();
 
                         clearbtn();
+                        displayTodayTransactions();
 
                     } else {
 
@@ -733,6 +947,15 @@ public class MainController implements Initializable {
                     prepare.setString(5, (String) item_unit_input.getSelectionModel().getSelectedItem());
                     prepare.setString(6, alpha_search_input.getText());
                     prepare.setString(7, item_discount_input.getText());
+
+                    prepare.executeUpdate();
+
+                    String insertStock = "INSERT INTO stock"
+                            + "(itemid,stock)"
+                            + "VALUES(?,1)";
+
+                    prepare = connect.prepareStatement(insertStock);
+                    prepare.setString(1, item_code_input.getText());
 
                     prepare.executeUpdate();
 
@@ -1240,6 +1463,18 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        UserSession session = UserSession.getInstance();
+        if ("cashier".equals(session.getRole())) {
+            items_mode.setDisable(true);
+            stock_mode.setDisable(true);
+            report_mode.setDisable(true);
+            user_mode.setDisable(true);
+
+            items_mode.setVisible(false);
+            stock_mode.setVisible(false);
+            report_mode.setVisible(false);
+            user_mode.setVisible(false);
+        }
 
         displayStockCard();
         userDisplayCard();
@@ -1247,6 +1482,11 @@ public class MainController implements Initializable {
         menuDisplayCard();
         itemDataShow();
         displayChange();
+        displayTodayTransactions();
+        displayTodayIncome();
+        displayMonthlyIncome();
+        displayLowStockItems();
+        displayIncomeChart();
 
         double change = calculateChange();
         System.out.println(change);
@@ -1320,6 +1560,47 @@ public class MainController implements Initializable {
             addItemToReceipt(item, quantity);
         } else {
             System.out.println("Item not found for barcode: " + barcode);
+        }
+    }
+
+    private void navFocus(Button navButton, String mode) {
+        navButton.setOnAction(event -> {
+            // Check if the mode is changing
+            if (!currentMode.equals(mode)) {
+                currentMode = mode; // Update the current mode
+
+                // Update styles for all buttons
+                updateButtonStyles();
+            }
+        });
+    }
+
+    private void updateButtonStyles() {
+        // Check and update styles for each button based on the current mode
+        if (currentMode.equals("sales_mode")) {
+            setPressedStyle(sales_mode);
+            removePressedStyle(report_mode, stock_mode, items_mode);
+        } else if (currentMode.equals("inventory_mode")) {
+            setPressedStyle(items_mode);
+            removePressedStyle(sales_mode, stock_mode, report_mode);
+        } else if (currentMode.equals("report_mode")) {
+            setPressedStyle(stock_mode);
+            removePressedStyle(sales_mode, items_mode, report_mode);
+        } else if (currentMode.equals("settings_mode")) {
+            setPressedStyle(report_mode);
+            removePressedStyle(sales_mode, items_mode, stock_mode);
+        }
+    }
+
+    private void setPressedStyle(Button button) {
+        if (!button.getStyleClass().contains("pressed-style")) {
+            button.getStyleClass().add("pressed-style");
+        }
+    }
+
+    private void removePressedStyle(Button... buttons) {
+        for (Button button : buttons) {
+            button.getStyleClass().remove("pressed-style");
         }
     }
 
